@@ -90,7 +90,7 @@ module.exports.sendMail = function sendMail(mail) {
             from: 'lukicaleksa04@gmail.com',
             to: mail.toMail,
             subject: mail.subject,
-            text: mail.mail
+            text: mail.message
         };
 
         transporter.sendMail(mailOptions, function(error, info) {
