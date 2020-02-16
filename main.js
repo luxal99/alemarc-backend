@@ -13,4 +13,5 @@
  service.sendMessageToAdmin();
 
  adminService.getAllMessages();
-
+adminService.deleteMessage();
+adminService.sendMail();

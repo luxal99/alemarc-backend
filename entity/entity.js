@@ -9,6 +9,12 @@
 
  }
 
+ module.exports = class MailToSend{
+    mail;
+    subject;
+    toMail;
+ }
+
  module.exports = class Client {
      id_client;
      name;
