@@ -32,9 +32,9 @@ mysqlConnection.connect((err) => {
         console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
 });
 
-app.listen(8080, () => {
-    console.log('App listening on port 3000!');
-});
+// app.listen(8080, () => {
+//     console.log('App listening on port 3000!');
+// });
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -43,6 +43,10 @@ app.use(function(req, res, next) {
         "Origin, X-Requested-With, Content-Type, Accept"
     );
     next();
+});
+
+app.listen(8080, () => {
+    console.log('App listening on port 3000!');
 });
 
 //------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
@@ -133,8 +137,9 @@ module.exports.getLastSaved = function getLastSaved() {
 }
 
 module.exports.saveClient = function saveClient(client) {
+
     client = new Client();
-    app.post('/saveClient', (req, res) => {
+    app.post('/client/saveClient', (req, res) => {
         client = req.body;
         app.use(cors());
 
@@ -169,7 +174,7 @@ module.exports.sendMessageToAdmin = function sendMessageToAdmin(message) {
     message = new Mail();
 
 
-    app.post('/sendMessage', (req, res) => {
+    app.post('/client/sendMessage', (req, res) => {
         app.use(cors());
         message = req.body;
 
@@ -178,7 +183,7 @@ module.exports.sendMessageToAdmin = function sendMessageToAdmin(message) {
                 res.send(error);
 
             } else {
-                res.send(message);
+                res.send('Uspesno poslata poruka');
             }
         })
     });

@@ -5,8 +5,12 @@
  const app = express();
  var http = require('http');
  var service = require('./service/client_service');
+ var adminService = require('./service/admin_service');
  const config = require('./config/config');
 
  service.saveClient();
  service.getLastSaved();
  service.sendMessageToAdmin();
+
+ adminService.getAllMessages();
+
