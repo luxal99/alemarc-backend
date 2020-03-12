@@ -38,7 +38,7 @@ app.use(function(req, res, next) {
 });
 
 app.listen(8000, () => {
-    console.log('App listening on port 3000!');
+    console.log('App listening on port 8000!');
 });
 
 module.exports.getAllMessages = function getAllMessages() {
@@ -49,7 +49,6 @@ module.exports.getAllMessages = function getAllMessages() {
             if(!err){
                 res.send(rows)
             }else{
-
                 res.send(err);
             }
         })
@@ -88,7 +87,7 @@ module.exports.sendMail = function sendMail(mail) {
         });
         var mailOptions = {
             from: 'lukicaleksa04@gmail.com',
-            to: mail.toMail,
+            to: [mail.toMail],
             subject: mail.subject,
             text: mail.message
         };
@@ -101,6 +100,58 @@ module.exports.sendMail = function sendMail(mail) {
             }
         });
         res.send("Sent");
+    })
+
+}
+
+module.exports.getAllOrders= function getAllOrders() {
+    app.get('/admin/getAllOrders',(req,res)=>{
+        mysqlConnection.query('select id_site_order,c.name,\n' +
+            '       c.lastname,\n' +
+            '       c.mail,\n' +
+            '       c.telephone,\n' +
+            '       mp.title,\n' +
+            '       mp.price,\n' +
+            '       po.title,\n' +
+            '       foreign_language,\n' +
+            '       site_link,\n' +
+            '       photography,\n' +
+            '       mail_sender,\n' +
+            '       domain,\n' +
+            '       hosting,\n' +
+            '       animation,\n' +
+            '       number_of_pages,\n' +
+            '       contact_form,\n' +
+            '       comment\n' +
+            'from site_order\n' +
+            '         join client c on site_order.id_client = c.id_client\n' +
+            '         join maintenance_packet mp on site_order.id_maintenance_packet = mp.id_maintenance_packet\n' +
+            '         join payment_option po on site_order.id_payment_option = po.id_payment_option\n' +
+            '         join site_type st on site_order.id_site_type = st.id_site_type;',(err,rows)=>{
+            if(err){
+                res.send("Neuspesan zahtev");
+            }else{
+                res.send(rows);
+
+            }
+        })
+    })
+
+
+
+}
+
+module.exports.deleteOrder = function deleteOrder() {
+    app.delete('/admin/deleteOrder/:id_site_order',(req,res)=>{
+        id_site_order=req.params.id_site_order;
+        mysqlConnection.query('delete from site_order where id_site_order=?',id_site_order,(err,rows)=>{
+            if(err){
+                res.send('Neuspesno brisanje');
+            }else{
+                res.send(rows);
+            }
+        })
+
     })
 
 }

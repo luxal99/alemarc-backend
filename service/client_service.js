@@ -6,6 +6,7 @@ var nodemailer = require('nodemailer');
 var app = express();
 
 
+var SiteOrder = require('../entity/entity');
 var Client = require('../entity/entity');
 var Mail = require('../entity/entity');
 
@@ -24,7 +25,6 @@ var mysqlConnection = mysql.createConnection({
 });
 
 
-
 mysqlConnection.connect((err) => {
     if (!err)
         console.log('Connection Established Successfully');
@@ -36,7 +36,7 @@ mysqlConnection.connect((err) => {
 //     console.log('App listening on port 3000!');
 // });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
@@ -46,7 +46,7 @@ app.use(function(req, res, next) {
 });
 
 app.listen(8080, () => {
-    console.log('App listening on port 3000!');
+    console.log('App listening on port 8080!');
 });
 
 //------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
@@ -117,9 +117,9 @@ app.listen(8080, () => {
 // })
 
 
-
 module.exports.getLastSaved = function getLastSaved() {
     app.get('/saveClient', (request, response) => {
+
         mysqlConnection.query('select * from client where id_client = (select max(id_client) from client); ', (err, rows) => {
             if (!err) {
 
@@ -143,7 +143,7 @@ module.exports.saveClient = function saveClient(client) {
         client = req.body;
         app.use(cors());
 
-        mysqlConnection.query('INSERT INTO client SET ?', client, function(error, results) {
+        mysqlConnection.query('INSERT INTO client SET ?', client, function (error, results) {
             if (error) {
                 console.log(error);
                 res.send(error);
@@ -151,15 +151,14 @@ module.exports.saveClient = function saveClient(client) {
             } else {
 
                 client.id_client = idSavedClient;
-                mysqlConnection.query('select * from client where id_client = (select max(id_client) from client);',(err, rows)=>{
+                mysqlConnection.query('select * from client where id_client = (select max(id_client) from client);', (err, rows) => {
                     app.use(cors());
-                    if(err){
+                    if (err) {
                         res.send(err);
-                    }else{
+                    } else {
                         res.send(rows);
                     }
                 })
-                console.log(idSavedClient);
 
 
             }
@@ -178,7 +177,7 @@ module.exports.sendMessageToAdmin = function sendMessageToAdmin(message) {
         app.use(cors());
         message = req.body;
 
-        mysqlConnection.query('insert into mail set ?', message, function(error, result) {
+        mysqlConnection.query('insert into mail set ?', message, function (error, result) {
             if (error) {
                 res.send(error);
 
@@ -187,4 +186,59 @@ module.exports.sendMessageToAdmin = function sendMessageToAdmin(message) {
             }
         })
     });
+}
+
+module.exports.createOrder = function createOrder(order) {
+    order = new SiteOrder();
+    app.post('/client/createOrder', (req, res) => {
+        app.use(cors());
+        order = req.body;
+        mysqlConnection.query('insert into site_order set ?',order, function (error, result) {
+            if (error) {
+                res.send(error);
+            } else {
+                res.send("Uspesno poslata narudzbina");
+            }
+        })
+    })
+    app.use(cors());
+
+
+}
+
+module.exports.getPaymentOptions = function getPaymentOptions() {
+    app.get('/client/getPaymentOptions',(req,res)=>{
+        mysqlConnection.query('select * from payment_option',(error,rows)=>{
+            if(error){
+                res.send(error);
+            }else{
+                res.send(rows);
+            }
+        })
+    })
+
+}
+
+module.exports.getMaintenacePacket = function getMaintenacePacket(){
+    app.get('/client/getMaintenacePacket',(req,res)=>{
+        mysqlConnection.query('select * from maintenance_packet',(error,rows)=>{
+            if(error){
+                res.send(error);
+            }else {
+                res.send(rows);
+            }
+        })
+    })
+}
+module.exports.getWebsiteTypes = function getWebsiteTypes() {
+    app.get('/client/getWebsiteTypes',(req,res)=>{
+        mysqlConnection.query('select * from site_type',(err,rows)=>{
+            if(err){
+                res.send(err);
+            }else{
+                res.send(rows);
+            }
+        })
+    })
+
 }
