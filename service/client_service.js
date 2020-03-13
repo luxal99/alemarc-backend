@@ -20,8 +20,9 @@ var mysqlConnection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'alemarc',
-    multipleStatements: true
+    database: 'alemarc_dev',
+    multipleStatements: true,
+    charset : 'utf8mb4'
 });
 
 
