@@ -13,7 +13,7 @@ var mysqlConnection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'alemarc_dev',
+    database: 'alemarc',
     multipleStatements: true
 });
 
