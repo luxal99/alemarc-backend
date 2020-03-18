@@ -181,6 +181,7 @@ module.exports.getAdminPasswrod = function getAdminPasswrod() {
                 if (await bcrypt.compare(req.body.password, rows[0].password)) {
                     var idUser = rows[0].id_admin;
                     isAuthenticated = true;
+                    console.log(isAuthenticated);
                     res.send({idUser, redirect: "/admin"});
 
                 } else {
