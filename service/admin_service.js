@@ -51,15 +51,19 @@ app.listen(8000, () => {
 module.exports.getAllMessages = function getAllMessages() {
 
     app.get('/admin/getAllMessages', (req, res) => {
+        if (isAuthenticated===false){
+            res.redirect('/')
+        }else{
+            mysqlConnection.query('select * from mail join client c on mail.id_client = c.id_client;', (err, rows) => {
+                if (!err) {
+                    res.send(rows);
 
-        mysqlConnection.query('select * from mail join client c on mail.id_client = c.id_client;', (err, rows) => {
-            if (!err) {
-                res.send(rows);
+                } else {
+                    res.send(err);
+                }
+            })
+        }
 
-            } else {
-                res.send(err);
-            }
-        })
     })
 }
 module.exports.deleteMessage = function deleteMessage(id_mail) {
@@ -120,6 +124,7 @@ app.get('/',(req,res)=>{
 
 module.exports.getAllOrders = function getAllOrders() {
     app.get('/admin/getAllOrders'  ,(req, res) => {
+
       if (isAuthenticated === false){
           res.redirect('/')
       }else{
@@ -181,7 +186,6 @@ module.exports.getAdminPasswrod = function getAdminPasswrod() {
                 if (await bcrypt.compare(req.body.password, rows[0].password)) {
                     var idUser = rows[0].id_admin;
                     isAuthenticated = true;
-                    console.log(isAuthenticated);
                     res.send({idUser, redirect: "/admin"});
 
                 } else {
