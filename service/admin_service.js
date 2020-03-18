@@ -3,22 +3,28 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const cors = require('cors');
 const app = express();
+const passport = require('passport');
+const bcrypt = require('bcrypt');
 var nodemailer = require('nodemailer');
 
 var Mail = require('../entity/entity');
 
 app.use(bodyparser.json());
 app.use(cors());
+app.use(passport.initialize());
+app.use(passport.session());
+
 var mysqlConnection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'alemarc99',
+    password: 'Luxal.99',
     database: 'alemarc',
     multipleStatements: true,
-    charset : 'utf8mb4'
+    charset: 'utf8mb4'
 
 });
 
+let isAuthenticated = false;
 
 
 mysqlConnection.connect((err) => {
@@ -29,8 +35,7 @@ mysqlConnection.connect((err) => {
 });
 
 
-
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
@@ -45,12 +50,13 @@ app.listen(8000, () => {
 
 module.exports.getAllMessages = function getAllMessages() {
 
-    app.get('/admin/getAllMessages',(req,res)=>{
+    app.get('/admin/getAllMessages', (req, res) => {
 
-        mysqlConnection.query('select * from mail join client c on mail.id_client = c.id_client;',(err,rows)=>{
-            if(!err){
-                res.send(rows)
-            }else{
+        mysqlConnection.query('select * from mail join client c on mail.id_client = c.id_client;', (err, rows) => {
+            if (!err) {
+                res.send(rows);
+
+            } else {
                 res.send(err);
             }
         })
@@ -77,7 +83,7 @@ module.exports.sendMail = function sendMail(mail) {
 
     app.post('/admin/sendMail', (req, res) => {
         mail = new Mail();
-        mail  = req.body;
+        mail = req.body;
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -94,7 +100,7 @@ module.exports.sendMail = function sendMail(mail) {
             text: mail.message
         };
 
-        transporter.sendMail(mailOptions, function(error, info) {
+        transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
             } else {
@@ -106,50 +112,59 @@ module.exports.sendMail = function sendMail(mail) {
 
 }
 
-module.exports.getAllOrders= function getAllOrders() {
-    app.get('/admin/getAllOrders',(req,res)=>{
-        mysqlConnection.query('select id_site_order,c.name,\n' +
-            '       c.lastname,\n' +
-            '       c.mail,\n' +
-            '       c.telephone,\n' +
-            '       mp.title,\n' +
-            '       mp.price,\n' +
-            '       po.title,\n' +
-            '       foreign_language,\n' +
-            '       site_link,\n' +
-            '       photography,\n' +
-            '       mail_sender,\n' +
-            '       domain,\n' +
-            '       hosting,\n' +
-            '       animation,\n' +
-            '       number_of_pages,\n' +
-            '       contact_form,\n' +
-            '       comment\n' +
-            'from site_order\n' +
-            '         join client c on site_order.id_client = c.id_client\n' +
-            '         join maintenance_packet mp on site_order.id_maintenance_packet = mp.id_maintenance_packet\n' +
-            '         join payment_option po on site_order.id_payment_option = po.id_payment_option\n' +
-            '         join site_type st on site_order.id_site_type = st.id_site_type;',(err,rows)=>{
-            if(err){
-                res.send("Neuspesan zahtev");
-            }else{
-                res.send(rows);
+app.get('/',(req,res)=>{
+    res.render('index.ejs');
 
-            }
-        })
+})
+
+
+module.exports.getAllOrders = function getAllOrders() {
+    app.get('/admin/getAllOrders'  ,(req, res) => {
+      if (isAuthenticated === false){
+          res.redirect('/')
+      }else{
+          mysqlConnection.query('select id_site_order,c.name,\n' +
+              '       c.lastname,\n' +
+              '       c.mail,\n' +
+              '       c.telephone,\n' +
+              '       mp.title,\n' +
+              '       mp.price,\n' +
+              '       po.title,\n' +
+              '       foreign_language,\n' +
+              '       site_link,\n' +
+              '       photography,\n' +
+              '       mail_sender,\n' +
+              '       domain,\n' +
+              '       hosting,\n' +
+              '       animation,\n' +
+              '       number_of_pages,\n' +
+              '       contact_form,\n' +
+              '       comment\n' +
+              'from site_order\n' +
+              '         join client c on site_order.id_client = c.id_client\n' +
+              '         join maintenance_packet mp on site_order.id_maintenance_packet = mp.id_maintenance_packet\n' +
+              '         join payment_option po on site_order.id_payment_option = po.id_payment_option\n' +
+              '         join site_type st on site_order.id_site_type = st.id_site_type;', (err, rows) => {
+              if (err) {
+                  res.send("Neuspesan zahtev");
+              } else {
+                  res.send(rows);
+
+              }
+          })
+      }
     })
-
 
 
 }
 
 module.exports.deleteOrder = function deleteOrder() {
-    app.delete('/admin/deleteOrder/:id_site_order',(req,res)=>{
-        id_site_order=req.params.id_site_order;
-        mysqlConnection.query('delete from site_order where id_site_order=?',id_site_order,(err,rows)=>{
-            if(err){
+    app.delete('/admin/deleteOrder/:id_site_order', (req, res) => {
+        id_site_order = req.params.id_site_order;
+        mysqlConnection.query('delete from site_order where id_site_order=?', id_site_order, (err, rows) => {
+            if (err) {
                 res.send('Neuspesno brisanje');
-            }else{
+            } else {
                 res.send(rows);
             }
         })
@@ -157,3 +172,71 @@ module.exports.deleteOrder = function deleteOrder() {
     })
 
 }
+
+module.exports.getAdminPasswrod = function getAdminPasswrod() {
+    app.post('/admin/getPassword', (req, res) => {
+        mysqlConnection.query('select * from admin where username = ?', req.body.username, async (err, rows) => {
+
+            try {
+                if (await bcrypt.compare(req.body.password, rows[0].password)) {
+                    var idUser = rows[0].id_admin;
+                    isAuthenticated = true;
+                    res.send({idUser, redirect: "/admin"});
+
+                } else {
+                    res.send({message: "Password invalid", redirect: "/login"})
+                }
+            } catch {
+                res.send({message: "Username not found", redirect: "/login"});
+            }
+
+        })
+    })
+}
+
+module.exports.createUser = function createUser() {
+
+    app.post('/admin/createUser', async (req, res) => {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        var user = {username: req.body.username, password: hashedPassword}
+        mysqlConnection.query('insert into admin set ?', user, (err, result) => {
+            if (err) {
+                res.send(err)
+            } else {
+                res.send('User registered');
+            }
+        })
+    })
+
+}
+
+module.exports.changeLogin = function changeLogin() {
+    app.put('/admin/changeLogin', async (req, res) => {
+
+
+        try {
+            const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+
+            mysqlConnection.query('update admin set username = ?,password=? where id_admin = ?',[req.body.username,hashedPassword,req.body.id_admin], (err, rows) => {
+                try {
+                    res.send(true);
+                } catch {
+                    res.send('Neuspseno ponavljanje lozinke');
+                }
+            })
+        } catch {
+            res.send("Old password invalid")
+        }
+
+
+    })
+
+}
+
+module.exports.logout = function logout() {
+    app.post('/admin/logout',(req,res)=>{
+        isAuthenticated = req.body.isAuthenticated;
+        res.send('Logout');
+    })
+}
+

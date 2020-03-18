@@ -8,6 +8,8 @@ var service = require('./service/client_service');
 var adminService = require('./service/admin_service');
 const config = require('./config/config');
 
+
+
 service.saveClient();
 service.getLastSaved();
 service.sendMessageToAdmin();
@@ -18,6 +20,10 @@ service.getMaintenacePacket();
 
 adminService.getAllMessages();
 adminService.deleteMessage();
+adminService.changeLogin();
 adminService.sendMail();
 adminService.getAllOrders();
 adminService.deleteOrder();
+adminService.getAdminPasswrod();
+adminService.createUser();
+adminService.logout();
