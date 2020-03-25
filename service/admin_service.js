@@ -6,25 +6,32 @@ const app = express();
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 var nodemailer = require('nodemailer');
+var jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 
 var Mail = require('../entity/entity');
 
 app.use(bodyparser.json());
 app.use(cors());
+app.use(express.json())
 app.use(passport.initialize());
 app.use(passport.session());
 
+//SQL CONNECTION
 var mysqlConnection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Luxal.99',
-    database: 'alemarc',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     multipleStatements: true,
     charset: 'utf8mb4'
 
 });
 
+//GLOBAL VARIABLES
 let isAuthenticated = false;
+var token = null;
 
 
 mysqlConnection.connect((err) => {
@@ -44,26 +51,44 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.listen(8000, () => {
+app.listen(process.env.ADMIN_PORT, () => {
     console.log('App listening on port 8000!');
 });
 
+/*
+    Funkcija u prvom koraku provera da li user ima token
+    Nakon toga proverava da li token koji ima user jeste validan
+    Ukoliko jeste stupa na snagu funkcija next() i izvrsava se SQL naredba
+ */
 module.exports.getAllMessages = function getAllMessages() {
 
-    app.get('/admin/getAllMessages', (req, res) => {
-        if (isAuthenticated===false){
-            res.redirect('/')
-        }else{
-            mysqlConnection.query('select * from mail join client c on mail.id_client = c.id_client;', (err, rows) => {
-                if (!err) {
-                    res.send(rows);
+    app.get('/admin/getAllMessages/:token', (req, res, next) => {
 
-                } else {
-                    res.send(err);
-                }
-            })
-        }
+        token = req.params.token;
+        console.log(token)
 
+        if (req.params.token === '') {
+            res.sendStatus(401);
+        } else next()
+    }, function (req, res, next) {
+
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                res.sendStatus(403)
+            } else {
+                console.log(user)
+                next();
+            }
+        })
+    }, function (req, res) {
+
+        mysqlConnection.query('select * from mail join client c on mail.id_client = c.id_client;', (err, rows) => {
+            if (!err) {
+                res.send(rows);
+            } else {
+                res.send(err);
+            }
+        })
     })
 }
 module.exports.deleteMessage = function deleteMessage(id_mail) {
@@ -116,48 +141,48 @@ module.exports.sendMail = function sendMail(mail) {
 
 }
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.render('index.ejs');
 
 })
 
 
 module.exports.getAllOrders = function getAllOrders() {
-    app.get('/admin/getAllOrders'  ,(req, res) => {
+    app.get('/admin/getAllOrders', (req, res) => {
 
-      if (isAuthenticated === false){
-          res.redirect('/')
-      }else{
-          mysqlConnection.query('select id_site_order,c.name,\n' +
-              '       c.lastname,\n' +
-              '       c.mail,\n' +
-              '       c.telephone,\n' +
-              '       mp.title,\n' +
-              '       mp.price,\n' +
-              '       po.title,\n' +
-              '       foreign_language,\n' +
-              '       site_link,\n' +
-              '       photography,\n' +
-              '       mail_sender,\n' +
-              '       domain,\n' +
-              '       hosting,\n' +
-              '       animation,\n' +
-              '       number_of_pages,\n' +
-              '       contact_form,\n' +
-              '       comment\n' +
-              'from site_order\n' +
-              '         join client c on site_order.id_client = c.id_client\n' +
-              '         join maintenance_packet mp on site_order.id_maintenance_packet = mp.id_maintenance_packet\n' +
-              '         join payment_option po on site_order.id_payment_option = po.id_payment_option\n' +
-              '         join site_type st on site_order.id_site_type = st.id_site_type;', (err, rows) => {
-              if (err) {
-                  res.send("Neuspesan zahtev");
-              } else {
-                  res.send(rows);
 
-              }
-          })
-      }
+
+            mysqlConnection.query('select id_site_order,c.name,\n' +
+                '       c.lastname,\n' +
+                '       c.mail,\n' +
+                '       c.telephone,\n' +
+                '       mp.title,\n' +
+                '       mp.price,\n' +
+                '       po.title,\n' +
+                '       foreign_language,\n' +
+                '       site_link,\n' +
+                '       photography,\n' +
+                '       mail_sender,\n' +
+                '       domain,\n' +
+                '       hosting,\n' +
+                '       animation,\n' +
+                '       number_of_pages,\n' +
+                '       contact_form,\n' +
+                '       comment\n' +
+                'from site_order\n' +
+                '         join client c on site_order.id_client = c.id_client\n' +
+                '         join maintenance_packet mp on site_order.id_maintenance_packet = mp.id_maintenance_packet\n' +
+                '         join payment_option po on site_order.id_payment_option = po.id_payment_option\n' +
+                '         join site_type st on site_order.id_site_type = st.id_site_type;', (err, rows) => {
+                if (err) {
+                    res.send("Neuspesan zahtev");
+                } else {
+                    res.send(rows);
+
+                }
+            })
+
+
     })
 
 
@@ -181,20 +206,17 @@ module.exports.deleteOrder = function deleteOrder() {
 module.exports.getAdminPasswrod = function getAdminPasswrod() {
     app.post('/admin/getPassword', (req, res) => {
         mysqlConnection.query('select * from admin where username = ?', req.body.username, async (err, rows) => {
-
             try {
                 if (await bcrypt.compare(req.body.password, rows[0].password)) {
                     var idUser = rows[0].id_admin;
-                    isAuthenticated = true;
-                    res.send({idUser, redirect: "/admin"});
-
+                    const accessToken = jwt.sign(idUser, process.env.ACCESS_TOKEN_SECRET);
+                    res.send({idUser, redirect: "/admin", token: accessToken});
                 } else {
                     res.send({message: "Password invalid", redirect: "/login"})
                 }
             } catch {
                 res.send({message: "Username not found", redirect: "/login"});
             }
-
         })
     })
 }
@@ -222,7 +244,7 @@ module.exports.changeLogin = function changeLogin() {
         try {
             const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
 
-            mysqlConnection.query('update admin set username = ?,password=? where id_admin = ?',[req.body.username,hashedPassword,req.body.id_admin], (err, rows) => {
+            mysqlConnection.query('update admin set username = ?,password=? where id_admin = ?', [req.body.username, hashedPassword, req.body.id_admin], (err, rows) => {
                 try {
                     res.send(true);
                 } catch {
@@ -239,7 +261,7 @@ module.exports.changeLogin = function changeLogin() {
 }
 
 module.exports.logout = function logout() {
-    app.post('/admin/logout',(req,res)=>{
+    app.post('/admin/logout', (req, res) => {
         isAuthenticated = req.body.isAuthenticated;
         res.send('Logout');
     })
