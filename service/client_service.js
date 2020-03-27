@@ -2,10 +2,11 @@ const mysql = require('mysql');
 const express = require('express');
 const bodyparser = require('body-parser');
 const cors = require('cors');
+var https = require('https');
 require('dotenv').config();
 
 var app = express();
-
+var fs = require('fs');
 
 var SiteOrder = require('../entity/entity');
 var Client = require('../entity/entity');
@@ -17,6 +18,14 @@ var idSavedClient;
 
 //------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
 
+
+const options={
+    key:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/privkey.pem'),
+    cert:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/fullchain.pem')
+};
+https.createServer(options,function (req,res) {
+    res.sendStatus(200)
+}).listen(443)
 var mysqlConnection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
