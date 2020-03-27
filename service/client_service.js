@@ -25,7 +25,7 @@ const options={
 };
 https.createServer(options,function (req,res) {
     res.sendStatus(200)
-}).listen(8443)
+},app).listen(8443);
 var mysqlConnection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -41,9 +41,6 @@ mysqlConnection.connect((err) => {
         console.log('Connection Established Successfully');
     else
         console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
-});
-app.listen(process.env.CLIENT_PORT, () => {
-    console.log('App listening on port 3000!');
 });
 
 app.use(function (req, res, next) {
