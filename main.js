@@ -1,28 +1,6 @@
-const mysql = require('mysql');
 const express = require('express');
-const bodyparser = require('body-parser');
-const cors = require('cors');
 const app = express();
-var http = require('http');
-var service = require('./service/client_service');
-var adminService = require('./service/admin_service');
-
-
-
-service.saveClient();
-service.getLastSaved();
-service.sendMessageToAdmin();
-service.createOrder();
-service.getPaymentOptions();
-service.getWebsiteTypes();
-service.getMaintenacePacket();
-
-adminService.getAllMessages();
-adminService.deleteMessage();
-adminService.changeLogin();
-adminService.sendMail();
-adminService.getAllOrders();
-adminService.deleteOrder();
-adminService.getAdminPasswrod();
-adminService.createUser();
-adminService.logout();
+const service = require('./service/service');
+service.listen(process.env.PORT,()=>{
+    console.log('Service runned')
+})
