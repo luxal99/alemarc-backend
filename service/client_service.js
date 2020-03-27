@@ -159,7 +159,7 @@ module.exports.getMaintenacePacket = function getMaintenacePacket() {
     })
 }
 module.exports.getWebsiteTypes = function getWebsiteTypes() {
-    https.get('/client/getWebsiteTypes', (req, res) => {
+    https.get('https://134.122.90.134:8443/client/getWebsiteTypes', (req, res) => {
         mysqlConnection.query('select * from site_type', (err, rows) => {
             if (err) {
                 res.send(err);
