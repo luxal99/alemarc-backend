@@ -12,6 +12,8 @@ var SiteOrder = require('../entity/entity');
 var Client = require('../entity/entity');
 var Mail = require('../entity/entity');
 
+app.use(express.static(__dirname + '/static', { dotfiles: 'allow' } ))
+
 
 app.use(bodyparser.json());
 var idSavedClient;
@@ -19,13 +21,13 @@ var idSavedClient;
 //------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
 
 
-const options={
+
+https.createServer({
     key:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/privkey.pem'),
     cert:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/fullchain.pem')
-};
-https.createServer(options,function (req,res) {
-    res.sendStatus(200)
-},app).listen(8443);
+},app).listen(8443,()=>{
+    console.log("Https RUN")
+});
 var mysqlConnection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
