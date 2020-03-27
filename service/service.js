@@ -3,8 +3,11 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const SMTPServer = require("smtp-server").SMTPServer;
 var nodemailer = require('nodemailer');
+var fs = require('fs');
 var jwt = require('jsonwebtoken');
+
 require('dotenv').config();
 
 var app = express();
@@ -39,7 +42,11 @@ var mysqlConnection = mysql.createConnection({
 });
 //------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
 
-
+const server = new SMTPServer({
+    secure:true,
+    key: fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/privkey.pem')
+});
 mysqlConnection.connect((err) => {
     if (!err)
         console.log('Connection Established Successfully');
@@ -47,6 +54,7 @@ mysqlConnection.connect((err) => {
         console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
 });
 
+server.listen(465);
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
@@ -362,6 +370,8 @@ app.post('/admin/logout', (req, res) => {
 //
 
 //endregion
+
+
 
 
 module.exports = app;
