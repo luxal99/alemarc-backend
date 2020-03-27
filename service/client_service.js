@@ -37,10 +37,6 @@ var mysqlConnection = mysql.createConnection({
     charset: 'utf8mb4'
 });
 
-app.get("/",(req,res)=>{
-    res.send('HTTPS');
-})
-
 
 mysqlConnection.connect((err) => {
     if (!err)
@@ -163,7 +159,7 @@ module.exports.getMaintenacePacket = function getMaintenacePacket() {
     })
 }
 module.exports.getWebsiteTypes = function getWebsiteTypes() {
-    app.get('/client/getWebsiteTypes', (req, res) => {
+    https.get('/client/getWebsiteTypes', (req, res) => {
         mysqlConnection.query('select * from site_type', (err, rows) => {
             if (err) {
                 res.send(err);
