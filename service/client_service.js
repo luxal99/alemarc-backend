@@ -34,7 +34,11 @@ var mysqlConnection = mysql.createConnection({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     multipleStatements: true,
-    charset: 'utf8mb4'
+    charset: 'utf8mb4',
+    ssl:{
+        key:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/privkey.pem'),
+        cert:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/fullchain.pem')
+    }
 });
 
 
