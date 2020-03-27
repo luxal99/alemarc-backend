@@ -37,6 +37,10 @@ var mysqlConnection = mysql.createConnection({
     charset: 'utf8mb4'
 });
 
+app.get("/",(req,res)=>{
+    res.send('HTTPS');
+})
+
 
 mysqlConnection.connect((err) => {
     if (!err)
