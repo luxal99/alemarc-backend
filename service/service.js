@@ -66,7 +66,6 @@ app.get('/saveClient', (request, response) => {
 
             response.send(rows);
             idSavedClient = rows[0].id_client;
-            console.log(idSavedClient);
         } else {
 
             res.send(rows);
@@ -167,7 +166,6 @@ Ukoliko jeste stupa na snagu funkcija next() i izvrsava se SQL naredba
 app.get('/admin/getAllMessages/:token', (req, res, next) => {
 
     token = req.params.token;
-    console.log(token)
 
     if (req.params.token === '') {
         res.sendStatus(401);
@@ -178,7 +176,6 @@ app.get('/admin/getAllMessages/:token', (req, res, next) => {
         if (err) {
             res.sendStatus(403)
         } else {
-            console.log(user)
             next();
         }
     })
@@ -195,12 +192,12 @@ app.get('/admin/getAllMessages/:token', (req, res, next) => {
 
 //Delete message
 app.delete('/admin/deleteMessage/:id_mail', (req, res) => {
-    id_mail = req.params.id_mail;
+   var id_mail = req.params.id_mail;
     mysqlConnection.query('delete from mail where id_mail = ?', id_mail, (error, rows) => {
             if (error) {
                 res.send(error);
             } else {
-                res.send('Uspesno obrisans');
+                res.send('Uspesno obrisana');
             }
         }
     )
