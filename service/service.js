@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+
 const express = require('express');
 const bodyparser = require('body-parser');
 const cors = require('cors');
@@ -9,7 +9,7 @@ var fs = require('fs');
 const axios = require('axios');
 const router = express.Router();
 var jwt = require('jsonwebtoken');
-
+const mysql = require('../config/database')
 require('dotenv').config();
 
 var app = express();
@@ -34,14 +34,14 @@ app.get('/', (req, res) => {
 });
 
 //------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
-var mysqlConnection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    multipleStatements: true,
-    charset: 'utf8mb4'
-});
+// var mysqlConnection = mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+//     multipleStatements: true,
+//     charset: 'utf8mb4'
+// });
 //------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
 
 const server = new SMTPServer({
@@ -81,10 +81,11 @@ app.get('/saveClient', (request, response) => {
 });
 
 
-app.post('/client/saveClient', (req, res) => {
+router.post('/saveClient', (req, res) => {
     client = req.body;
+    console.log(req.body)
     app.use(cors());
-    mysqlConnection.query('INSERT INTO client SET ?', client, function (error, results) {
+    mysql.query('INSERT INTO client SET ?', client, function (error, results) {
         if (error) {
             console.log(error);
             res.send(error);
@@ -134,11 +135,11 @@ app.post('/client/createOrder', (req, res) => {
 
 
 //Get payment option from db
-router.get('/getPaymentOptions', (req, res) => {
-    mysqlConnection.query('select * from payment_option', (error, rows) => {
-        res.send(rows);
-    })
-})
+// router.get('/getPaymentOptions', (req, res) => {
+//     mysqlConnection.query('select * from payment_option', (error, rows) => {
+//         res.send(rows);
+//     })
+// })
 //End
 
 

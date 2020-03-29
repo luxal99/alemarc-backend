@@ -1,18 +1,23 @@
-const mysql = require('mysql');
+const mysql = require('../config/database');
 const express = require('express');
 const bodyparser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const app = express();
 const SMTPServer = require("smtp-server").SMTPServer;
-var nodemailer = require('nodemailer');
-var fs = require('fs');
-const axios = require('axios');
+const nodemailer = require('nodemailer');
+const fs = require('fs');
 const router = express.Router();
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
+app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}));
+app.use(bodyparser.json());
+app.use(cors());
 
-var app = express();
+var SiteOrder = require('../entity/entity');
+var Client = require('../entity/entity');
+var Mail = require('../entity/entity');
 
 //region -- Admin --
 
@@ -22,7 +27,7 @@ Nakon toga proverava da li token koji ima user jeste validan
 Ukoliko jeste stupa na snagu funkcija next() i izvrsava se SQL naredba
 */
 
-app.get('/admin/getAllMessages/:token', (req, res, next) => {
+router.get('/getAllMessages/:token', (req, res, next) => {
 
     token = req.params.token;
 
@@ -40,19 +45,19 @@ app.get('/admin/getAllMessages/:token', (req, res, next) => {
     })
 }, function (req, res) {
 
-    mysqlConnection.query('select * from mail join client c on mail.id_client = c.id_client;', (err, rows) => {
+    mysql.query('select * from mail join client c on mail.id_client = c.id_client;', (err, rows) => {
         if (!err) {
             res.send(rows);
         } else {
             res.send(err);
         }
     })
-})
+});
 
 //Delete message
-app.delete('/deleteMessage/:id_mail', (req, res) => {
+router.delete('/deleteMessage/:id_mail', (req, res) => {
     var id_mail = req.params.id_mail;
-    mysqlConnection.query('delete from mail where id_mail = ?', id_mail, (error, rows) => {
+    mysql.query('delete from mail where id_mail = ?', id_mail, (error, rows) => {
             if (error) {
                 res.send(error);
             } else {
@@ -60,18 +65,19 @@ app.delete('/deleteMessage/:id_mail', (req, res) => {
             }
         }
     )
-})
+});
 //End
 
 //Send mail to client
-app.post('/sendMail', (req, res) => {
+router.post('/sendMail', (req, res) => {
     mail = new Mail();
     mail = req.body;
     var transporter = nodemailer.createTransport({
         service: 'gmail',
+
         auth: {
-            user: 'lukicaleksa04@gmail.com',
-            pass: '*145#7890='
+            user: process.env.MAIL_ADDRESS,
+            pass: process.env.MAIL_PASSWORD
         },
         port: '465',
         secure: true
@@ -91,21 +97,21 @@ app.post('/sendMail', (req, res) => {
         }
     });
     res.send("Sent");
-})
+});
 //End
 
 
 app.get('/', (req, res) => {
     res.render('index.ejs');
 
-})
+});
 
 
 //Return all orders
 router.get('/getAllOrders', (req, res) => {
 
 
-    mysqlConnection.query('select id_site_order,c.name,\n' +
+    mysql.query('select id_site_order,c.name,\n' +
         '       c.lastname,\n' +
         '       c.mail,\n' +
         '       c.telephone,\n' +
@@ -136,14 +142,14 @@ router.get('/getAllOrders', (req, res) => {
     })
 
 
-})
+});
 //end
 
 
 //Forward ID order and delete
-app.delete('/deleteOrder/:id_site_order', (req, res) => {
+router.delete('/deleteOrder/:id_site_order', (req, res) => {
     id_site_order = req.params.id_site_order;
-    mysqlConnection.query('delete from site_order where id_site_order=?', id_site_order, (err, rows) => {
+    mysql.query('delete from site_order where id_site_order=?', id_site_order, (err, rows) => {
         if (err) {
             res.send('Neuspesno brisanje');
         } else {
@@ -151,7 +157,7 @@ app.delete('/deleteOrder/:id_site_order', (req, res) => {
         }
     })
 
-})
+});
 //End
 
 /*
@@ -160,8 +166,8 @@ app.delete('/deleteOrder/:id_site_order', (req, res) => {
      bcrypt kako bi ih dekriptovala i uporedila i sa onim sto dolazi
      sa frontenda
  */
-app.post('/getPassword', (req, res) => {
-    mysqlConnection.query('select * from admin where username = ?', req.body.username, async (err, rows) => {
+router.post('/getPassword', (req, res) => {
+    mysql.query('select * from admin where username = ?', req.body.username, async (err, rows) => {
         try {
             if (await bcrypt.compare(req.body.password, rows[0].password)) {
                 var idUser = rows[0].id_admin;
@@ -174,31 +180,31 @@ app.post('/getPassword', (req, res) => {
             res.send({message: "Username not found", redirect: "/login"});
         }
     })
-})
+});
 
 
 //Create admin
-app.post('/createUser', async (req, res) => {
+router.post('/createUser', async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     var user = {username: req.body.username, password: hashedPassword}
-    mysqlConnection.query('insert into admin set ?', user, (err, result) => {
+    mysql.query('insert into admin set ?', user, (err, result) => {
         if (err) {
             res.send(err)
         } else {
             res.send('User registered');
         }
     })
-})
+});
 //End
 
 
-app.put('/changeLogin', async (req, res) => {
+router.put('/changeLogin', async (req, res) => {
 
 
     try {
         const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
 
-        mysqlConnection.query('update admin set username = ?,password=? where id_admin = ?', [req.body.username, hashedPassword, req.body.id_admin], (err, rows) => {
+        mysql.query('update admin set username = ?,password=? where id_admin = ?', [req.body.username, hashedPassword, req.body.id_admin], (err, rows) => {
             try {
                 res.send(true);
             } catch {
@@ -210,15 +216,15 @@ app.put('/changeLogin', async (req, res) => {
     }
 
 
-})
+});
 
 
 //Logout
-app.post('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     isAuthenticated = req.body.isAuthenticated;
     res.send('Logout');
-})
+});
 //
 
-module.exports = router
+module.exports = router;
 //endregion

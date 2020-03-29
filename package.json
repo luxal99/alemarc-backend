@@ -1,0 +1,9 @@
+{
+  "name": "alemarc-backend",
+  "version": "1.0.0",
+  "dependencies": {
+    "mysql": "latest",
+    "dotenv": "latest",
+    "body-parser": "latest"
+  }
+}

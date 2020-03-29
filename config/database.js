@@ -2,7 +2,7 @@ const mysql = require('mysql');
 require('dotenv').config();
 const express = require('express');
 const app = express();
-app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}))
+app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}));
 
 var mysqlConnection = mysql.createConnection({
     host: process.env.DB_HOST,

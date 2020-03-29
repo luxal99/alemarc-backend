@@ -1,13 +1,8 @@
 const express = require('express');
 const bodyparser = require('body-parser');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
-const SMTPServer = require("smtp-server").SMTPServer;
-var nodemailer = require('nodemailer');
-var fs = require('fs');
-const axios = require('axios');
+const mysql = require('../config/database');
 const router = express.Router();
-var jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
@@ -24,7 +19,7 @@ order = new SiteOrder();
 client = new Client();
 var idSavedClient;
 
-app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}))
+app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}));
 app.use(bodyparser.json());
 app.use(cors());
 
@@ -42,8 +37,8 @@ app.use(function (req, res, next) {
 
 //Client to forward for order
 router.get('/saveClient', (request, response) => {
-
-    mysqlConnection.query('select * from client where id_client = (select max(id_client) from client); ', (err, rows) => {
+    app.use(cors())
+    mysql.query('select * from client where id_client = (select max(id_client) from client); ', (err, rows) => {
         if (!err) {
 
             response.send(rows);
@@ -61,13 +56,13 @@ router.get('/saveClient', (request, response) => {
 router.post('/saveClient', (req, res) => {
     client = req.body;
     app.use(cors());
-    mysqlConnection.query('INSERT INTO client SET ?', client, function (error, results) {
+    mysql.query('INSERT INTO client SET ?', client, function (error, results) {
         if (error) {
             console.log(error);
             res.send(error);
         } else {
             client.id_client = idSavedClient;
-            mysqlConnection.query('select * from client where id_client = (select max(id_client) from client);', (err, rows) => {
+            mysql.query('select * from client where id_client = (select max(id_client) from client);', (err, rows) => {
                 app.use(cors());
                 if (err) {
                     res.send(err);
@@ -85,7 +80,7 @@ router.post('/saveClient', (req, res) => {
 router.post('/sendMessage', (req, res) => {
     app.use(cors());
     message = req.body;
-    mysqlConnection.query('insert into mail set ?', message, function (error, result) {
+    mysql.query('insert into mail set ?', message, function (error, result) {
         if (error) {
             res.send(error);
         } else {
@@ -99,7 +94,7 @@ router.post('/sendMessage', (req, res) => {
 router.post('/createOrder', (req, res) => {
     app.use(cors());
     order = req.body;
-    mysqlConnection.query('insert into site_order set ?', order, function (error, result) {
+    mysql.query('insert into site_order set ?', order, function (error, result) {
         if (error) {
             res.send(error);
         } else {
@@ -112,7 +107,7 @@ router.post('/createOrder', (req, res) => {
 
 //Get payment option from db
 router.get('/getPaymentOptions', (req, res) => {
-    mysqlConnection.query('select * from payment_option', (error, rows) => {
+    mysql.query('select * from payment_option', (error, rows) => {
         res.send(rows);
     })
 })
@@ -121,7 +116,7 @@ router.get('/getPaymentOptions', (req, res) => {
 
 //Get maintenance package
 router.get('/getMaintenacePacket', (req, res) => {
-    mysqlConnection.query('select * from maintenance_packet', (error, rows) => {
+    mysql.query('select * from maintenance_packet', (error, rows) => {
         res.send(rows);
     })
 });
@@ -129,7 +124,7 @@ router.get('/getMaintenacePacket', (req, res) => {
 
 // Get type of website
 router.get('/getWebsiteTypes', (req, res) => {
-    mysqlConnection.query('select * from site_type where id_site_type =1', (err, rows) => {
+    mysql.query('select * from site_type where id_site_type =1', (err, rows) => {
         res.send(rows);
     })
 });
