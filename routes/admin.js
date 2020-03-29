@@ -14,152 +14,6 @@ require('dotenv').config();
 
 var app = express();
 
-//Type of entity
-var SiteOrder = require('../entity/entity');
-var Client = require('../entity/entity');
-var Mail = require('../entity/entity');
-
-//Entity initialize
-message = new Mail();
-order = new SiteOrder();
-client = new Client();
-var idSavedClient;
-
-app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}))
-app.use(bodyparser.json());
-app.use(cors());
-
-app.get('/', (req, res) => {
-    res.send('Now using https..');
-});
-
-//------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
-var mysqlConnection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    multipleStatements: true,
-    charset: 'utf8mb4'
-});
-//------------------------------------------------------DATABASE CONNECTION-------------------------------------------------------------
-
-const server = new SMTPServer({
-    secure:true,
-    // key:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/privkey.pem'),
-    // cert:fs.readFileSync('/etc/letsencrypt/live/alemarc.dev/fullchain.pem')
-});
-
-
-
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
-});
-
-//region -- Client --
-
-//Client to forward for order
-app.get('/saveClient', (request, response) => {
-
-    mysqlConnection.query('select * from client where id_client = (select max(id_client) from client); ', (err, rows) => {
-        if (!err) {
-
-            response.send(rows);
-            idSavedClient = rows[0].id_client;
-        } else {
-
-            res.send(rows);
-
-        }
-
-    })
-});
-
-
-app.post('/client/saveClient', (req, res) => {
-    client = req.body;
-    app.use(cors());
-    mysqlConnection.query('INSERT INTO client SET ?', client, function (error, results) {
-        if (error) {
-            console.log(error);
-            res.send(error);
-        } else {
-            client.id_client = idSavedClient;
-            mysqlConnection.query('select * from client where id_client = (select max(id_client) from client);', (err, rows) => {
-                app.use(cors());
-                if (err) {
-                    res.send(err);
-                } else {
-                    res.send(rows);
-                }
-            })
-        }
-    })
-
-});
-
-
-//Send Message to Admin
-app.post('/client/sendMessage', (req, res) => {
-    app.use(cors());
-    message = req.body;
-    mysqlConnection.query('insert into mail set ?', message, function (error, result) {
-        if (error) {
-            res.send(error);
-        } else {
-            res.send('Uspesno poslata poruka');
-        }
-    })
-});
-//End
-
-//Create order
-app.post('/client/createOrder', (req, res) => {
-    app.use(cors());
-    order = req.body;
-    mysqlConnection.query('insert into site_order set ?', order, function (error, result) {
-        if (error) {
-            res.send(error);
-        } else {
-            res.send("Uspesno poslata narudzbina");
-        }
-    })
-})
-//End order
-
-
-//Get payment option from db
-router.get('/getPaymentOptions', (req, res) => {
-    mysqlConnection.query('select * from payment_option', (error, rows) => {
-        res.send(rows);
-    })
-})
-//End
-
-
-//Get maintenance package
-app.get('/client/getMaintenacePacket', (req, res) => {
-    mysqlConnection.query('select * from maintenance_packet', (error, rows) => {
-        res.send(rows);
-    })
-});
-// End
-
-// Get type of website
-app.get('/client/getWebsiteTypes' , (req, res) => {
-    mysqlConnection.query('select * from site_type where id_site_type =1', (err, rows) => {
-        res.send(rows);
-    })
-});
-// End
-
-//endregion
-
 //region -- Admin --
 
 /*
@@ -196,8 +50,8 @@ app.get('/admin/getAllMessages/:token', (req, res, next) => {
 })
 
 //Delete message
-app.delete('/admin/deleteMessage/:id_mail', (req, res) => {
-   var id_mail = req.params.id_mail;
+app.delete('/deleteMessage/:id_mail', (req, res) => {
+    var id_mail = req.params.id_mail;
     mysqlConnection.query('delete from mail where id_mail = ?', id_mail, (error, rows) => {
             if (error) {
                 res.send(error);
@@ -210,7 +64,7 @@ app.delete('/admin/deleteMessage/:id_mail', (req, res) => {
 //End
 
 //Send mail to client
-app.post('/admin/sendMail', (req, res) => {
+app.post('/sendMail', (req, res) => {
     mail = new Mail();
     mail = req.body;
     var transporter = nodemailer.createTransport({
@@ -248,7 +102,7 @@ app.get('/', (req, res) => {
 
 
 //Return all orders
-app.get('/admin/getAllOrders', (req, res) => {
+router.get('/getAllOrders', (req, res) => {
 
 
     mysqlConnection.query('select id_site_order,c.name,\n' +
@@ -287,7 +141,7 @@ app.get('/admin/getAllOrders', (req, res) => {
 
 
 //Forward ID order and delete
-app.delete('/admin/deleteOrder/:id_site_order', (req, res) => {
+app.delete('/deleteOrder/:id_site_order', (req, res) => {
     id_site_order = req.params.id_site_order;
     mysqlConnection.query('delete from site_order where id_site_order=?', id_site_order, (err, rows) => {
         if (err) {
@@ -306,7 +160,7 @@ app.delete('/admin/deleteOrder/:id_site_order', (req, res) => {
      bcrypt kako bi ih dekriptovala i uporedila i sa onim sto dolazi
      sa frontenda
  */
-app.post('/admin/getPassword', (req, res) => {
+app.post('/getPassword', (req, res) => {
     mysqlConnection.query('select * from admin where username = ?', req.body.username, async (err, rows) => {
         try {
             if (await bcrypt.compare(req.body.password, rows[0].password)) {
@@ -324,7 +178,7 @@ app.post('/admin/getPassword', (req, res) => {
 
 
 //Create admin
-app.post('/admin/createUser', async (req, res) => {
+app.post('/createUser', async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     var user = {username: req.body.username, password: hashedPassword}
     mysqlConnection.query('insert into admin set ?', user, (err, result) => {
@@ -338,7 +192,7 @@ app.post('/admin/createUser', async (req, res) => {
 //End
 
 
-app.put('/admin/changeLogin', async (req, res) => {
+app.put('/changeLogin', async (req, res) => {
 
 
     try {
@@ -360,15 +214,11 @@ app.put('/admin/changeLogin', async (req, res) => {
 
 
 //Logout
-app.post('/admin/logout', (req, res) => {
+app.post('/logout', (req, res) => {
     isAuthenticated = req.body.isAuthenticated;
     res.send('Logout');
 })
 //
 
+module.exports = router
 //endregion
-
-
-
-
-module.exports = router;
