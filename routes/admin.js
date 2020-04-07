@@ -9,11 +9,13 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const fileUpload = require('express-fileupload')
 
 require('dotenv').config();
 app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}));
 app.use(bodyparser.json());
 app.use(cors());
+app.use(fileUpload())
 
 var SiteOrder = require('../entity/entity');
 var Client = require('../entity/entity');
