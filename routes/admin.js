@@ -148,6 +148,26 @@ router.get('/getAllOrders', (req, res) => {
 //end
 
 
+//Upload photo
+
+app.post('/upload', function (req, res) {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.image_url;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv(`../alemarc-frontend/src/assets/img/blog/${sampleFile.name}`, function (err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send(sampleFile.name);
+    });
+});
+//End
+
 //Forward ID order and delete
 router.delete('/deleteOrder/:id_site_order', (req, res) => {
     id_site_order = req.params.id_site_order;
@@ -229,4 +249,5 @@ router.post('/logout', (req, res) => {
 //
 
 module.exports = router;
+module.exports = app;
 //endregion
