@@ -9,19 +9,35 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const fileUpload = require('express-fileupload')
+const fileUpload = require('express-fileupload');
+
+var dateFormat = require('dateformat');
+var now = new Date();
+
+dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 
 require('dotenv').config();
 app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}));
 app.use(bodyparser.json());
 app.use(cors());
-app.use(fileUpload())
+app.use(router)
+app.use(fileUpload());
 
 var SiteOrder = require('../entity/entity');
 var Client = require('../entity/entity');
 var Mail = require('../entity/entity');
+const Blog = require('../model/Blog');
+
+
+app.get('/', (req, res) => {
+    res.render('index.ejs');
+
+});
+
 
 //region -- Admin --
+
+//region -- Messages/Mail --
 
 /*
 Funkcija u prvom koraku provera da li user ima token
@@ -102,12 +118,9 @@ router.post('/sendMail', (req, res) => {
 });
 //End
 
+//endregion
 
-app.get('/', (req, res) => {
-    res.render('index.ejs');
-
-});
-
+//region -- Order --
 
 //Return all orders
 router.get('/getAllOrders', (req, res) => {
@@ -148,26 +161,6 @@ router.get('/getAllOrders', (req, res) => {
 //end
 
 
-//Upload photo
-
-app.post('/upload', function (req, res) {
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
-    }
-
-    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-    let sampleFile = req.files.image_url;
-
-    // Use the mv() method to place the file somewhere on your server
-    sampleFile.mv(`../alemarc-frontend/src/assets/img/blog/${sampleFile.name}`, function (err) {
-        if (err)
-            return res.status(500).send(err);
-
-        res.send(sampleFile.name);
-    });
-});
-//End
-
 //Forward ID order and delete
 router.delete('/deleteOrder/:id_site_order', (req, res) => {
     id_site_order = req.params.id_site_order;
@@ -181,6 +174,11 @@ router.delete('/deleteOrder/:id_site_order', (req, res) => {
 
 });
 //End
+
+
+//endregion
+
+//region -- User --
 
 /*
     Funkcija se koristi prilikom pristupa admin panelu.
@@ -203,7 +201,6 @@ router.post('/getPassword', (req, res) => {
         }
     })
 });
-
 
 //Create admin
 router.post('/createUser', async (req, res) => {
@@ -248,6 +245,72 @@ router.post('/logout', (req, res) => {
 });
 //
 
+
+//endregion
+//Upload photo
+
+//region -- Blog --
+
+app.post('/upload', function (req, res) {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.image_url;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv(`../alemarc-frontend/src/assets/img/blog/${sampleFile.name}`, function (err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send(sampleFile.name);
+    });
+});
+
+router.post('/saveBlog', (req, res) => {
+    try{
+        var blog = new Blog({
+            header:req.body.header,
+            text:req.body.blog_content,
+            author:'Alemarc',
+            date:now,
+            images:req.body.images
+        })
+
+        blog.save().then(
+            res.send("Saved")
+        )
+    }catch  {
+
+    }
+
+})
+//End
+
+router.delete("/deleteBlog/:_id", async (req,res)=>{
+    try{
+        const removedOrder = await Blog.deleteOne({_id: req.params._id});
+        res.sendStatus(200);
+    }catch  {
+
+    }
+})
+
+router.get('/getBlogs', async (req,res)=>{
+    try{
+        blog = await Blog.find();
+        res.send(blog);
+    }catch  {
+
+    }
+})
+
+
+
+//endregion
+
 module.exports = router;
 module.exports = app;
+
 //endregion

@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const mongoose = require('mongoose');
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -19,6 +20,11 @@ mysqlConnection.connect((err) => {
     else
         console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
 });
+
+mongoose.connect(process.env.MONGO_DB,{useNewUrlParser:true, useUnifiedTopology: true },
+    ()=> console.log('Connected to Database'));
+
+module.exports = mongoose;
 
 module.exports = mysqlConnection;
 
