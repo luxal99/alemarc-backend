@@ -34,6 +34,8 @@ app.get('/', (req, res) => {
 
 });
 
+router.get('/json', (req, res) => {
+})
 
 //region -- Admin --
 
@@ -278,7 +280,7 @@ router.post('/saveBlog', (req, res) => {
             author: 'Alemarc',
             date: now,
             images: req.body.images,
-            cover:req.body.cover,
+            cover: req.body.cover,
             technologies: req.body.technologies
         })
 
@@ -292,13 +294,13 @@ router.post('/saveBlog', (req, res) => {
 })
 //End
 
-router.get('/getOneBlog/:_id',async (req,res)=>{
-   try{
-       const blog = await Blog.findOne({_id:req.params._id});
-       res.send(blog)
-   }catch  {
-       res.send("Can not find")
-   }
+router.get('/getOneBlog/:_id', async (req, res) => {
+    try {
+        const blog = await Blog.findOne({_id: req.params._id});
+        res.send(blog)
+    } catch {
+        res.send("Can not find")
+    }
 })
 router.delete("/deleteBlog/:_id", async (req, res) => {
     try {
@@ -320,6 +322,33 @@ router.get('/getBlogs', async (req, res) => {
 
 
 //endregion
+
+router.post('/newBoard',(req,res)=>{
+   try{
+       var board = req.body;
+       console.log(board)
+       mysql.query('insert into task_board set ?',board,(err,rows)=>{
+
+          if (!err){
+              res.send(rows)
+          }else{
+              res.send(err)
+          }
+       })
+   }catch  {
+       res.send("Not saved")
+   }
+});
+
+router.get('/getBoards',(req,res)=>{
+    try{
+        mysql.query('select * from task_board',(err,rows)=>{
+            res.send(rows)
+        })
+    }catch  {
+        res.send("Can not get")
+    }
+})
 
 module.exports = router;
 module.exports = app;
