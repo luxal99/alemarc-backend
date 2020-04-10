@@ -6,7 +6,11 @@ const BlogSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    text: {
+    text_en: {
+        type: String,
+        required: true
+    },
+    text_sr: {
         type: String,
         required: true
     },
@@ -14,9 +18,18 @@ const BlogSchema = mongoose.Schema({
         type: String,
     },
     date: {
-        type: Number
+        type: Date
+
+    },
+    cover:{
+        type:String
     },
     images: [{
+        type: String
+    }
+
+    ],
+    technologies: [{
         type: String
     }
 

@@ -14,7 +14,7 @@ const fileUpload = require('express-fileupload');
 var dateFormat = require('dateformat');
 var now = new Date();
 
-dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+dateFormat(now, "dd-mm-yyyy");
 
 require('dotenv').config();
 app.use(express.static(__dirname + '/static', {dotfiles: 'allow'}));
@@ -269,43 +269,54 @@ app.post('/upload', function (req, res) {
 });
 
 router.post('/saveBlog', (req, res) => {
-    try{
+    console.log(req.body)
+    try {
         var blog = new Blog({
-            header:req.body.header,
-            text:req.body.blog_content,
-            author:'Alemarc',
-            date:now,
-            images:req.body.images
+            header: req.body.header,
+            text_en: req.body.text_en,
+            text_sr: req.body.text_sr,
+            author: 'Alemarc',
+            date: now,
+            images: req.body.images,
+            cover:req.body.cover,
+            technologies: req.body.technologies
         })
 
         blog.save().then(
             res.send("Saved")
         )
-    }catch  {
+    } catch {
 
     }
 
 })
 //End
 
-router.delete("/deleteBlog/:_id", async (req,res)=>{
-    try{
+router.get('/getOneBlog/:_id',async (req,res)=>{
+   try{
+       const blog = await Blog.findOne({_id:req.params._id});
+       res.send(blog)
+   }catch  {
+       res.send("Can not find")
+   }
+})
+router.delete("/deleteBlog/:_id", async (req, res) => {
+    try {
         const removedOrder = await Blog.deleteOne({_id: req.params._id});
         res.sendStatus(200);
-    }catch  {
+    } catch {
 
     }
 })
 
-router.get('/getBlogs', async (req,res)=>{
-    try{
+router.get('/getBlogs', async (req, res) => {
+    try {
         blog = await Blog.find();
         res.send(blog);
-    }catch  {
+    } catch {
 
     }
 })
-
 
 
 //endregion
