@@ -1,10 +1,11 @@
-import {Column, PrimaryGeneratedColumn, Entity, ManyToOne, JoinColumn, JoinTable} from "typeorm";
+import {Column, PrimaryGeneratedColumn, Entity, ManyToOne, JoinColumn, JoinTable, BaseEntity, OneToMany} from "typeorm";
 import {TaskBoard} from "./TaskBoard";
 import {CardStatus} from "./CardStatus";
+import {CardAttachment} from "./CardAttachment";
 
 
 @Entity()
-export class TaskCard {
+export class TaskCard extends BaseEntity{
 
     @PrimaryGeneratedColumn()
     id_task_card: number;
@@ -24,4 +25,8 @@ export class TaskCard {
 
     @ManyToOne(type => CardStatus, id_card_status => id_card_status.cardList)
     id_card_status: CardStatus
+
+    @OneToMany(type => CardAttachment,cardAttachmentList=>cardAttachmentList.id_task_card)
+    cardAttachmentList:CardAttachment[]
+
 }

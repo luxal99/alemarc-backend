@@ -2,12 +2,9 @@ import "reflect-metadata";
 import express = require("express");
 const app = express();
 import {createConnection} from "typeorm";
-import {User} from "./entity/User";
-import {TaskBoard} from "./entity/TaskBoard";
-import {TaskCard} from "./entity/TaskCard";
-
-const boardRoute = require("./routes/board");
-app.use('/board',boardRoute);
+import bodyParser = require("body-parser");
+import {App} from "./routes/board";
+app.use(bodyParser.json());
 
 
 
@@ -32,8 +29,7 @@ createConnection().then(async connection => {
 }).catch(error => console.log(error));
 
 
- app.listen(8000,()=>{
-
- });
-
-
+const secApp = new App().app;
+secApp.listen(8000,()=>{
+    console.log('Callback')
+});

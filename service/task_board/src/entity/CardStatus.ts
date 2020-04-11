@@ -1,8 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, JoinColumn, BaseEntity} from "typeorm";
 import {TaskCard} from "./TaskCard";
 
 @Entity()
-export class CardStatus {
+export class CardStatus extends BaseEntity{
 
     @PrimaryGeneratedColumn()
     id_card_status: number;
