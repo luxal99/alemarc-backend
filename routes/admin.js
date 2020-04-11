@@ -13,6 +13,8 @@ const fileUpload = require('express-fileupload');
 
 var dateFormat = require('dateformat');
 var now = new Date();
+var TaskBoard = require('../model/TaskBoad');
+var TaskCard = require('../model/TaskCard')
 
 dateFormat(now, "dd-mm-yyyy");
 
@@ -323,32 +325,47 @@ router.get('/getBlogs', async (req, res) => {
 
 //endregion
 
-router.post('/newBoard',(req,res)=>{
-   try{
-       var board = req.body;
-       console.log(board)
-       mysql.query('insert into task_board set ?',board,(err,rows)=>{
+router.post('/newBoard', (req, res) => {
+    try {
+        const taskBoard = new TaskBoard({
+            title: req.body.title,
+            task_cards:req.body.task_cards
+        });
 
-          if (!err){
-              res.send(rows)
-          }else{
-              res.send(err)
-          }
-       })
-   }catch  {
-       res.send("Not saved")
-   }
+        taskBoard.save().then(
+            res.sendStatus(200)
+        )
+    } catch {
+        res.send("Not saved")
+    }
 });
 
-router.get('/getBoards',(req,res)=>{
-    try{
-        mysql.query('select * from task_board',(err,rows)=>{
-            res.send(rows)
+router.post('/postCard', async (req, res) => {
+    try {
+        const taskCard = new TaskCard({
+            header: req.body.header,
+            title: req.body.title,
+            due_date: req.body.due_date,
+            status: req.body.status
         })
-    }catch  {
+
+        taskCard.save().then(
+            res.sendStatus(200)
+        )
+    } catch {
+        res.sendStatus(500)
+    }
+})
+
+router.get('/getBoards', async (req, res) => {
+    try {
+        const boards = await TaskBoard.find();
+        res.send(boards)
+    } catch {
         res.send("Can not get")
     }
 })
+
 
 module.exports = router;
 module.exports = app;
