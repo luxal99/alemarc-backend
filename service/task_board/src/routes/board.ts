@@ -27,7 +27,7 @@ export class App {
 
         this.app.get('/board/getBoard', async (req: Request, res: Response) => {
             try {
-                const boards = await TaskBoard.find({relations: ['cardList','cardList.cardAttachmentList','cardList.id_card_status']});
+                const boards = await TaskBoard.find({relations: ['cardList', 'cardList.cardAttachmentList', 'cardList.id_card_status']});
                 res.send(boards);
             } catch {
                 res.sendStatus(500)
@@ -74,35 +74,58 @@ export class App {
             }
         });
 
-        this.app.put('/board/updateTask',async (req:Request,res:Response)=>{
+        this.app.get('/board/getTasks/:id_task_board', async (req, res) => {
+            console.log(req.params);
+            try {
 
-            try{
-                await getConnection().createQueryBuilder().update(TaskCard).set({
-                    header:req.body.header,
-                    description:req.body.description,
-                    due_date:req.body.due_date,
-                    id_card_status:req.body.id_card_status
-                }).where("id_task_card = :id_task_card",{id_task_card:req.body.id_task_card}).execute();
+                const list = await TaskCard.find({where:{id_task_board:req.params.id_task_board},relations:['cardAttachmentList','id_card_status']});
 
-                res.sendStatus(200)
-            }catch  {
+                res.send(list);
+            } catch {
                 res.sendStatus(500)
             }
         })
 
-        this.app.post('/board/updateAttachmentList', async (req:Request,res:Response)=>{
-            try{
-                await CardAttachment.delete({id_task_card:req.body.id_task_card});
-                for (const element of req.body.cardAttachmentList){
+        this.app.put('/board/updateTask', async (req: Request, res: Response) => {
+
+            try {
+                await getConnection().createQueryBuilder().update(TaskCard).set({
+                    header: req.body.header,
+                    description: req.body.description,
+                    due_date: req.body.due_date,
+                    id_card_status: req.body.id_card_status
+                }).where("id_task_card = :id_task_card", {id_task_card: req.body.id_task_card}).execute();
+
+                res.sendStatus(200)
+            } catch {
+                res.sendStatus(500)
+            }
+        })
+
+        this.app.post('/board/updateAttachmentList', async (req: Request, res: Response) => {
+
+            try {
+                await CardAttachment.delete({url: req.body.url});
+                res.sendStatus(200)
+
+            } catch {
+                res.sendStatus(500)
+            }
+        });
+
+        this.app.post('/board/addNewAttachment', async (req: Request, res: Response) => {
+            try {
+                for (const element of req.body.cardAttachmentList) {
                     var cardAttachment = new CardAttachment();
                     cardAttachment.id_task_card = req.body.id_task_card;
                     cardAttachment.url = element.url;
 
                     await CardAttachment.save(cardAttachment);
 
-                    res.sendStatus(200)
                 }
-            }catch  {
+
+                res.sendStatus(200)
+            } catch {
                 res.sendStatus(500)
             }
         })

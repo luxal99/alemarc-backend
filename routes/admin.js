@@ -320,6 +320,7 @@ router.get('/getBlogs', async (req, res) => {
 })
 
 router.post('/board/upload', function (req, res) {
+    console.log(req.body.files)
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
@@ -332,7 +333,7 @@ router.post('/board/upload', function (req, res) {
         if (err)
             return res.status(500).send(err);
 
-        res.send(sampleFile.name);
+        res.sendStatus(404);
     });
 });
 
