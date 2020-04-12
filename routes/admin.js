@@ -4,7 +4,6 @@ const bodyparser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const app = express();
-const SMTPServer = require("smtp-server").SMTPServer;
 const nodemailer = require('nodemailer');
 const fs = require('fs');
 const router = express.Router();

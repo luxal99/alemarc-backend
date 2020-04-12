@@ -6,7 +6,6 @@ const axios = require('axios');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 
-
 app.use(bodyParser.json({limit: '50mb', type: 'application/json'}));
 app.use(bodyParser.json());
 app.use(router);

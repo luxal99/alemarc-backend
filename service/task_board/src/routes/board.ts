@@ -24,7 +24,7 @@ export class App {
 
     protected routes() {
 
-
+        //region -- Board --
         this.app.get('/board/getBoard', async (req: Request, res: Response) => {
             try {
                 const boards = await TaskBoard.find({relations: ['cardList', 'cardList.cardAttachmentList', 'cardList.id_card_status']});
@@ -46,6 +46,9 @@ export class App {
                 res.sendStatus(500);
             }
         });
+        //endregion
+
+        //region -- Task --
 
         this.app.post('/board/createTask', async (req: Request, res: Response) => {
             try {
@@ -56,11 +59,13 @@ export class App {
                 taskCard.description = req.body.description;
                 taskCard.due_date = req.body.due_date;
                 taskCard.text = req.body.text;
+
                 taskCard.id_task_board = await TaskBoard.findOne(req.body.id_task_board);
                 taskCard.id_card_status = await CardStatus.findOne(req.body.id_card_status);
                 await TaskCard.save(taskCard);
 
                 for (const attachment of req.body.cardAttachmentList) {
+
                     const cardAttachment = new CardAttachment();
                     cardAttachment.url = attachment.url;
                     cardAttachment.id_task_card = taskCard;
@@ -78,7 +83,10 @@ export class App {
             console.log(req.params);
             try {
 
-                const list = await TaskCard.find({where:{id_task_board:req.params.id_task_board},relations:['cardAttachmentList','id_card_status']});
+                const list = await TaskCard.find({
+                    where: {id_task_board: req.params.id_task_board},
+                    relations: ['cardAttachmentList', 'id_card_status']
+                });
 
                 res.send(list);
             } catch {
@@ -102,6 +110,9 @@ export class App {
             }
         })
 
+        //endregion
+
+        //region -- CardAttachment --
         this.app.post('/board/updateAttachmentList', async (req: Request, res: Response) => {
 
             try {
@@ -112,6 +123,7 @@ export class App {
                 res.sendStatus(500)
             }
         });
+
 
         this.app.post('/board/addNewAttachment', async (req: Request, res: Response) => {
             try {
@@ -129,6 +141,8 @@ export class App {
                 res.sendStatus(500)
             }
         })
+        //endregion
+
     }
 
 }
