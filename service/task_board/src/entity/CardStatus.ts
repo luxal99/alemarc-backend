@@ -11,7 +11,7 @@ export class CardStatus extends BaseEntity{
     title: string;
 
     @OneToMany(type => TaskCard,cardList=>cardList.id_card_status)
-    cardList:TaskCard[]
+    cardList:TaskCard[];
 
 
 }

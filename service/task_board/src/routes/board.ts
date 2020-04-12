@@ -6,6 +6,7 @@ import  cors = require("cors");
 import {TaskCard} from "../entity/TaskCard";
 import {CardStatus} from "../entity/CardStatus";
 import {CardAttachment} from "../entity/CardAttachment";
+import {getConnection} from "typeorm";
 
 export class App {
     public app: Application;
@@ -26,7 +27,7 @@ export class App {
 
         this.app.get('/board/getBoard', async (req: Request, res: Response) => {
             try {
-                const boards = await TaskBoard.find({relations: ['cardList','cardList.cardAttachmentList']});
+                const boards = await TaskBoard.find({relations: ['cardList','cardList.cardAttachmentList','cardList.id_card_status']});
                 res.send(boards);
             } catch {
                 res.sendStatus(500)
@@ -34,7 +35,6 @@ export class App {
         });
 
         this.app.post('/board/createBoard', async (req: Request, res: Response) => {
-            console.log(req.body);
             try {
 
                 const board = new TaskBoard();
@@ -48,15 +48,14 @@ export class App {
         });
 
         this.app.post('/board/createTask', async (req: Request, res: Response) => {
-            console.log(req.body)
             try {
 
                 const taskCard = new TaskCard();
 
-
                 taskCard.header = req.body.header;
                 taskCard.description = req.body.description;
-                taskCard.due_date = new Date("04-11-2022");
+                taskCard.due_date = req.body.due_date;
+                taskCard.text = req.body.text;
                 taskCard.id_task_board = await TaskBoard.findOne(req.body.id_task_board);
                 taskCard.id_card_status = await CardStatus.findOne(req.body.id_card_status);
                 await TaskCard.save(taskCard);
@@ -72,6 +71,39 @@ export class App {
                 res.sendStatus(200)
             } catch {
                 res.sendStatus(500);
+            }
+        });
+
+        this.app.put('/board/updateTask',async (req:Request,res:Response)=>{
+
+            try{
+                await getConnection().createQueryBuilder().update(TaskCard).set({
+                    header:req.body.header,
+                    description:req.body.description,
+                    due_date:req.body.due_date,
+                    id_card_status:req.body.id_card_status
+                }).where("id_task_card = :id_task_card",{id_task_card:req.body.id_task_card}).execute();
+
+                res.sendStatus(200)
+            }catch  {
+                res.sendStatus(500)
+            }
+        })
+
+        this.app.post('/board/updateAttachmentList', async (req:Request,res:Response)=>{
+            try{
+                await CardAttachment.delete({id_task_card:req.body.id_task_card});
+                for (const element of req.body.cardAttachmentList){
+                    var cardAttachment = new CardAttachment();
+                    cardAttachment.id_task_card = req.body.id_task_card;
+                    cardAttachment.url = element.url;
+
+                    await CardAttachment.save(cardAttachment);
+
+                    res.sendStatus(200)
+                }
+            }catch  {
+                res.sendStatus(500)
             }
         })
     }

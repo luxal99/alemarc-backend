@@ -13,18 +13,21 @@ export class TaskCard extends BaseEntity{
     @Column()
     header: string;
 
-    @Column()
+    @Column({length:10240})
     description: string;
 
     @Column()
-    due_date: Date;
+    due_date: string;
+
+    @Column()
+    text: string;
 
     @ManyToOne(type => TaskBoard, id_task_board => id_task_board.cardList)
     @JoinTable()
-    id_task_board: TaskBoard
+    id_task_board: TaskBoard;
 
     @ManyToOne(type => CardStatus, id_card_status => id_card_status.cardList)
-    id_card_status: CardStatus
+    id_card_status: CardStatus;
 
     @OneToMany(type => CardAttachment,cardAttachmentList=>cardAttachmentList.id_task_card)
     cardAttachmentList:CardAttachment[]

@@ -7,7 +7,7 @@ const adminRoute = require('./routes/admin');
 const clientRoute = require('./routes/client');
 const controller = require('./controller/controller');
 
-app.use('/board',controller);
+app.use('/admin',controller);
 app.use(bodyparser.json());
 app.use('/admin',adminRoute);
 app.use('/client',clientRoute);

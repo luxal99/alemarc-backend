@@ -36,10 +36,6 @@ app.get('/', (req, res) => {
 
 });
 
-router.get('/json', (req, res) => {
-
-})
-
 //region -- Admin --
 
 //region -- Messages/Mail --
@@ -256,7 +252,7 @@ router.post('/logout', (req, res) => {
 
 //region -- Blog --
 
-app.post('/upload', function (req, res) {
+router.post('/upload', function (req, res) {
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
@@ -323,50 +319,26 @@ router.get('/getBlogs', async (req, res) => {
     }
 })
 
-
-//endregion
-
-router.post('/newBoard', (req, res) => {
-    try {
-        const taskBoard = new TaskBoard({
-            title: req.body.title,
-            task_cards:req.body.task_cards
-        });
-
-        taskBoard.save().then(
-            res.sendStatus(200)
-        )
-    } catch {
-        res.send("Not saved")
+router.post('/board/upload', function (req, res) {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
     }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.image_url;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv(`../alemarc-frontend/src/assets/img/task/${sampleFile.name}`, function (err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send(sampleFile.name);
+    });
 });
 
-router.post('/postCard', async (req, res) => {
-    try {
-        const taskCard = new TaskCard({
-            header: req.body.header,
-            title: req.body.title,
-            due_date: req.body.due_date,
-            status: req.body.status
-        })
 
-        taskCard.save().then(
-            res.sendStatus(200)
-        )
-    } catch {
-        res.sendStatus(500)
-    }
-})
 
-router.get('/getBoards', async (req, res) => {
-    try {
-        const boards = await TaskBoard.find();
-        res.send(boards)
-    } catch {
-        res.send("Can not get")
-    }
-})
-
+//endregion
 
 module.exports = router;
 module.exports = app;
