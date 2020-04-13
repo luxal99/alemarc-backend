@@ -135,6 +135,16 @@ export class App {
             } catch {
                 res.sendStatus(500)
             }
+        });
+
+        this.app.get("/board/getArchivedTask/:id_task_board",async (req:Request,res:Response)=>{
+            try{
+                const archivedTask = await getConnection().query(`select * from task_card 
+                where visible = 0 and idTaskBoardIdTaskBoard = ${req.params.id_task_board};`);
+                res.send(archivedTask)
+            }catch  {
+                res.sendStatus(500);
+            }
         })
 
         //endregion

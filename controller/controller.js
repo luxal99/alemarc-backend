@@ -37,7 +37,6 @@ router.get('/board/getBoard', async (req, res) => {
 
 router.post('/board/createTask', async (req, res) => {
 
-    console.log(req.body)
     try {
         taskCard = await axios.post('http://localhost:8000/board/createTask', {
             header: req.body.header,
@@ -55,6 +54,15 @@ router.post('/board/createTask', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+router.get('/board/getArchivedTask/:id_task_board',async (req,res)=>{
+    try{
+        const archivedTask = await axios.get(`http://localhost:8000/board/getArchivedTask/${req.params.id_task_board}`);
+        res.send(archivedTask.data)
+    }catch {
+        res.sendStatus(500)
+    }
+})
 
 router.put('/board/updateTask', async (req, res) => {
     console.log(req.body)
