@@ -46,11 +46,26 @@ export class App {
                 res.sendStatus(500);
             }
         });
+
+        this.app.get('/board/getTaskPerBoard',async (req:Request,res:Response)=>{
+            try{
+                const arr = await getConnection().query('select title, count(id_task_card) as num_of_tasks\n' +
+                    'from task_card\n' +
+                    '         join task_board tb on task_card.idTaskBoardIdTaskBoard = tb.id_task_board\n' +
+                    'group by idTaskBoardIdTaskBoard');
+
+                res.send(arr);
+            }catch  {
+                res.sendStatus(500)
+            }
+        })
         //endregion
 
         //region -- Task --
 
         this.app.post('/board/createTask', async (req: Request, res: Response) => {
+
+            console.log(req.body)
             try {
 
                 const taskCard = new TaskCard();
@@ -59,6 +74,7 @@ export class App {
                 taskCard.description = req.body.description;
                 taskCard.due_date = req.body.due_date;
                 taskCard.text = req.body.text;
+                taskCard.visible = req.body.visible;
 
                 taskCard.id_task_board = await TaskBoard.findOne(req.body.id_task_board);
                 taskCard.id_card_status = await CardStatus.findOne(req.body.id_card_status);
@@ -79,6 +95,16 @@ export class App {
             }
         });
 
+        this.app.get('/board/getTaskAnalizeAll',async (req:Request,res:Response)=>{
+            const arr = await getConnection().query('select cs.title, count(id_task_card) as num_of_tasks\n' +
+                'from task_card\n' +
+                '         join card_status cs on task_card.idCardStatusIdCardStatus = cs.id_card_status\n' +
+                '         join task_board tb on task_card.idTaskBoardIdTaskBoard = tb.id_task_board\n' +
+                'group by idCardStatusIdCardStatus');
+
+            res.send(arr);
+        })
+
         this.app.get('/board/getTasks/:id_task_board', async (req, res) => {
             console.log(req.params);
             try {
@@ -95,10 +121,11 @@ export class App {
         })
 
         this.app.put('/board/updateTask', async (req: Request, res: Response) => {
-
+            console.log(req.body)
             try {
                 await getConnection().createQueryBuilder().update(TaskCard).set({
                     header: req.body.header,
+                    visible : req.body.visible,
                     description: req.body.description,
                     due_date: req.body.due_date,
                     id_card_status: req.body.id_card_status

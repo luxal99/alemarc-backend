@@ -41,6 +41,7 @@ router.post('/board/createTask', async (req, res) => {
     try {
         taskCard = await axios.post('http://localhost:8000/board/createTask', {
             header: req.body.header,
+            visible:req.body.visible,
             description: req.body.description,
             id_task_board: req.body.id_task_board,
             id_card_status: req.body.id_card_status,
@@ -56,12 +57,14 @@ router.post('/board/createTask', async (req, res) => {
 });
 
 router.put('/board/updateTask', async (req, res) => {
+    console.log(req.body)
     try {
         const task = axios.put("http://localhost:8000/board/updateTask", {
             id_task_card: req.body.id_task_card,
             header: req.body.header,
             description: req.body.description,
             due_date: req.body.due_date,
+            visible:req.body.visible,
             id_card_status: req.body.id_card_status
         });
 
@@ -109,6 +112,24 @@ router.get('/board/getTaskList/:id_task_board',async (req,res)=>{
     }
 })
 
+router.get('/board/getTaskAnalizeAll' , async (req,res)=>{
+    try{
+        const arr = await axios.get("http://localhost:8000/board/getTaskAnalizeAll");
+        res.send(arr.data)
+    }catch  {
+        res.sendStatus(500)
+    }
+});
+
+router.get('/board/getTaskPerBoard',async (req,res)=>{
+    try{
+        const arr = await axios.get("http://localhost:8000/board/getTaskPerBoard");
+
+        res.send(arr.data)
+    }catch  {
+        res.sendStatus(500)
+    }
+})
 
 module.exports = router;
 module.exports = app;

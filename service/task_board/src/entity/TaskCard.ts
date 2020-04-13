@@ -22,6 +22,9 @@ export class TaskCard extends BaseEntity{
     @Column()
     text: string;
 
+    @Column()
+    visible: boolean;
+
     @ManyToOne(type => TaskBoard, id_task_board => id_task_board.cardList)
     @JoinTable()
     id_task_board: TaskBoard;
