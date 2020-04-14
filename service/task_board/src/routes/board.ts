@@ -242,6 +242,23 @@ export class App {
                 res.send("Input error")
             }
 
+        });
+
+        this.app.post('/checkUser', async (req: Request, res: Response) => {
+
+            console.log(req.body)
+            try {
+                const user = await User.find({where: {username: req.body.username},relations:['id_client','id_client.taskBoardList']});
+
+                if (await bcrypt.compare(req.body.password, user[0].password)) {
+                    res.send(user)
+                } else {
+                    res.send("Password error")
+                }
+            } catch (error) {
+                error = new UserValidation("Not valid");
+                res.send(error)
+            }
         })
 
         //endregion

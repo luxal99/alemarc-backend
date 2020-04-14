@@ -1,3 +1,6 @@
+import bcrypt = require("bcrypt");
+
+
 export class UserValidation extends Error {
 
     static validateUsername(username: string) {
@@ -11,4 +14,18 @@ export class UserValidation extends Error {
             throw new Error("Password error")
         }
     }
+
+    static async checkPassword(inputPassword: string, hashedPassword: string) {
+        if (!await bcrypt.compare(inputPassword, hashedPassword)) {
+            throw new Error("Not match");
+        } else {
+            return true
+        }
+    }
+
+    constructor(message: string) {
+        super(message);
+    }
+
+
 }

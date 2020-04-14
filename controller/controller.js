@@ -150,15 +150,30 @@ router.get('/board/getTaskPerBoard', async (req, res) => {
 
 router.post('/board/register', async (req, res) => {
     try {
-        const user = await axios.post("http://localhost:8000/register",{
-            fullname:req.body.fullname,
-            mail:req.body.mail,
-            username:req.body.username,
-            password:req.body.password
+        const user = await axios.post("http://localhost:8000/register", {
+            fullname: req.body.fullname,
+            mail: req.body.mail,
+            username: req.body.username,
+            password: req.body.password
         })
         res.send(user.data);
     } catch {
         res.sendStatus(500);
+    }
+});
+
+router.post('/board/login', async (req, res) => {
+
+    console.log(req.body)
+    try {
+        const user = await axios.post("http://localhost:8000/checkUser", {
+            username: req.body.username,
+            password: req.body.password
+        });
+
+        res.send(user.data);
+    } catch {
+        res.send("Error")
     }
 })
 
