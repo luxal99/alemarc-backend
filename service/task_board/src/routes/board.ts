@@ -249,7 +249,6 @@ export class App {
             console.log(req.body)
             try {
                 const user = await User.find({where: {username: req.body.username},relations:['id_client','id_client.taskBoardList']});
-
                 if (await bcrypt.compare(req.body.password, user[0].password)) {
                     res.send(user)
                 } else {
@@ -272,6 +271,21 @@ export class App {
             }
         })
 
+        this.app.get('/board/getUserProfile/:id_client', async (req:Request,res:Response)=>{
+
+            try{
+                const user = await getConnection().query(`select * from task_table.client 
+                join user u on client.id_client = u.idClientIdClient where id_client = ${req.params.id_client};`);
+
+
+
+                res.send(user);
+            }catch  {
+                res.send("Error")
+            }
+        })
+
     }
+
 
 }

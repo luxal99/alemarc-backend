@@ -184,6 +184,15 @@ router.get('/board/getBoardPerUser/:id_client', async (req, res) => {
     } catch {
         res.send("Error");
     }
+});
+
+router.get('/board/getUserProfile/:id_client',async (req,res)=>{
+    try{
+        const userProfile = await axios.get(`http://localhost:8000/board/getUserProfile/${req.params.id_client}`);
+        res.send(userProfile.data);
+    }catch  {
+        res.send("Error")
+    }
 })
 
 module.exports = router;
