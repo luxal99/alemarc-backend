@@ -175,6 +175,15 @@ router.post('/board/login', async (req, res) => {
     } catch {
         res.send("Error")
     }
+});
+
+router.get('/board/getBoardPerUser/:id_client', async (req, res) => {
+    try {
+        taskList = await axios.get(`http://localhost:8000/board/getBoardPerUser/${req.params.id_client}`);
+        res.send(taskList.data);
+    } catch {
+        res.send("Error");
+    }
 })
 
 module.exports = router;

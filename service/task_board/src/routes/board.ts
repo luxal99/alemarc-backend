@@ -263,6 +263,14 @@ export class App {
 
         //endregion
 
+        this.app.get('/board/getBoardPerUser/:id_client',async (req:Request,res:Response)=>{
+            try{
+                const taskByUser = await Client.find({where:{id_client:req.params.id_client},relations:['taskBoardList','taskBoardList.cardList']});
+                res.send(taskByUser);
+            }catch  {
+                res.send("Error")
+            }
+        })
 
     }
 
