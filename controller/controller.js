@@ -64,6 +64,16 @@ router.get('/board/getArchivedTask/:id_task_board',async (req,res)=>{
     }
 })
 
+router.put('/board/unArchiveAll',async (req,res)=>{
+    try{
+        await axios.put("http://localhost:8000/board/unArchiveAll",{
+            taskList:req.body
+        })
+    }catch  {
+        res.sendStatus(500)
+    }
+})
+
 router.put('/board/updateTask', async (req, res) => {
     console.log(req.body)
     try {

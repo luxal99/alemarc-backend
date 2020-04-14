@@ -47,15 +47,15 @@ export class App {
             }
         });
 
-        this.app.get('/board/getTaskPerBoard',async (req:Request,res:Response)=>{
-            try{
+        this.app.get('/board/getTaskPerBoard', async (req: Request, res: Response) => {
+            try {
                 const arr = await getConnection().query('select title, count(id_task_card) as num_of_tasks\n' +
                     'from task_card\n' +
                     '         join task_board tb on task_card.idTaskBoardIdTaskBoard = tb.id_task_board\n' +
                     'group by idTaskBoardIdTaskBoard');
 
                 res.send(arr);
-            }catch  {
+            } catch {
                 res.sendStatus(500)
             }
         })
@@ -95,7 +95,7 @@ export class App {
             }
         });
 
-        this.app.get('/board/getTaskAnalizeAll',async (req:Request,res:Response)=>{
+        this.app.get('/board/getTaskAnalizeAll', async (req: Request, res: Response) => {
             const arr = await getConnection().query('select cs.title, count(id_task_card) as num_of_tasks\n' +
                 'from task_card\n' +
                 '         join card_status cs on task_card.idCardStatusIdCardStatus = cs.id_card_status\n' +
@@ -125,7 +125,7 @@ export class App {
             try {
                 await getConnection().createQueryBuilder().update(TaskCard).set({
                     header: req.body.header,
-                    visible : req.body.visible,
+                    visible: req.body.visible,
                     description: req.body.description,
                     due_date: req.body.due_date,
                     id_card_status: req.body.id_card_status
@@ -137,12 +137,24 @@ export class App {
             }
         });
 
-        this.app.get("/board/getArchivedTask/:id_task_board",async (req:Request,res:Response)=>{
-            try{
+        this.app.put('/board/unArchiveAll', async (req: Request, res: Response) => {
+            try {
+                for (const task of req.body.taskList){
+                    await getConnection().createQueryBuilder().update(TaskCard).set({
+                        visible:true
+                    }).where("id_task_card = :id_task_card",{id_task_card:task.id_task_card}).execute()
+                    res.sendStatus(200);
+                }
+            } catch {
+
+            }
+        })
+        this.app.get("/board/getArchivedTask/:id_task_board", async (req: Request, res: Response) => {
+            try {
                 const archivedTask = await getConnection().query(`select * from task_card 
                 where visible = 0 and idTaskBoardIdTaskBoard = ${req.params.id_task_board};`);
                 res.send(archivedTask)
-            }catch  {
+            } catch {
                 res.sendStatus(500);
             }
         })
