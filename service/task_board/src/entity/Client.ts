@@ -9,10 +9,7 @@ export class Client extends BaseEntity{
     id_client: number;
 
     @Column()
-    name: string;
-
-    @Column()
-    lastname: string;
+    fullname: string;
 
     @Column()
     mail: string;

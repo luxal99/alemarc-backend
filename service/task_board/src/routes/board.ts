@@ -9,8 +9,10 @@ import {CardAttachment} from "../entity/CardAttachment";
 import {getConnection, getRepository} from "typeorm";
 import {Client} from "../entity/Client";
 import {User} from "../entity/User";
+import {UserValidation} from "../service/UserValidation";
 import {where} from "sequelize";
 import {UserRole} from "../entity/UserRole";
+import {load} from "dotenv";
 
 export class App {
     public app: Application;
@@ -198,8 +200,6 @@ export class App {
         this.app.post("/register", async (req: Request, res: Response) => {
 
             try {
-
-
                 const checkUsername = await User.findOne({username: req.body.username});
 
                 if (checkUsername === undefined) {
@@ -207,26 +207,27 @@ export class App {
                     const user = new User();
                     user.username = req.body.username;
                     user.password = await bcrypt.hash(req.body.password, 10);
-
                     user.id_user_role = await getRepository(UserRole).findOne({
-                        where:{role_name:'ADMIN'}
+                        where: {role_name: 'ADMIN'}
                     });
+
+                    UserValidation.validateUsername(user.username);
+                    UserValidation.validatePassword(req.body.password);
 
                     await User.save(user).then(async () => {
 
                         const client = new Client();
-                        client.name = req.body.name;
-                        client.lastname = req.body.lastname;
+                        client.fullname = req.body.fullname;
                         client.mail = req.body.mail;
 
                         await Client.save(client).catch(() => {
                             res.send("Not saved");
                         });
                         await getConnection().createQueryBuilder().update(User).set({
-                            id_client:client
-                        }).where("id_user = :id_user",{id_user:user.id_user}).execute();
+                            id_client: client
+                        }).where("id_user = :id_user", {id_user: user.id_user}).execute();
 
-                    }).catch(()=>{
+                    }).catch(() => {
                         res.send("User not saved");
                     });
 
@@ -238,7 +239,7 @@ export class App {
                     res.send("Korisnicko ime je zauzeto")
                 }
             } catch {
-                res.sendStatus(500)
+                res.send("Input error")
             }
 
         })

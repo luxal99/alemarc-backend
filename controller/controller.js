@@ -40,7 +40,7 @@ router.post('/board/createTask', async (req, res) => {
     try {
         taskCard = await axios.post('http://localhost:8000/board/createTask', {
             header: req.body.header,
-            visible:req.body.visible,
+            visible: req.body.visible,
             description: req.body.description,
             id_task_board: req.body.id_task_board,
             id_card_status: req.body.id_card_status,
@@ -55,21 +55,21 @@ router.post('/board/createTask', async (req, res) => {
     }
 });
 
-router.get('/board/getArchivedTask/:id_task_board',async (req,res)=>{
-    try{
+router.get('/board/getArchivedTask/:id_task_board', async (req, res) => {
+    try {
         const archivedTask = await axios.get(`http://localhost:8000/board/getArchivedTask/${req.params.id_task_board}`);
         res.send(archivedTask.data)
-    }catch {
+    } catch {
         res.sendStatus(500)
     }
 })
 
-router.put('/board/unArchiveAll',async (req,res)=>{
-    try{
-        await axios.put("http://localhost:8000/board/unArchiveAll",{
-            taskList:req.body
+router.put('/board/unArchiveAll', async (req, res) => {
+    try {
+        await axios.put("http://localhost:8000/board/unArchiveAll", {
+            taskList: req.body
         })
-    }catch  {
+    } catch {
         res.sendStatus(500)
     }
 })
@@ -81,7 +81,7 @@ router.put('/board/updateTask', async (req, res) => {
             header: req.body.header,
             description: req.body.description,
             due_date: req.body.due_date,
-            visible:req.body.visible,
+            visible: req.body.visible,
             id_card_status: req.body.id_card_status
         });
 
@@ -119,32 +119,46 @@ router.post('/board/addNewAttachment', async (req, res) => {
 });
 
 
-router.get('/board/getTaskList/:id_task_board',async (req,res)=>{
+router.get('/board/getTaskList/:id_task_board', async (req, res) => {
     console.log(req.params.id_task_board)
-    try{
+    try {
         const taskList = await axios.get(`http://localhost:8000/board/getTasks/${req.params.id_task_board}`);
         res.send(taskList.data)
-    }catch  {
+    } catch {
         res.sendStatus(500)
     }
 })
 
-router.get('/board/getTaskAnalizeAll' , async (req,res)=>{
-    try{
+router.get('/board/getTaskAnalizeAll', async (req, res) => {
+    try {
         const arr = await axios.get("http://localhost:8000/board/getTaskAnalizeAll");
         res.send(arr.data)
-    }catch  {
+    } catch {
         res.sendStatus(500)
     }
 });
 
-router.get('/board/getTaskPerBoard',async (req,res)=>{
-    try{
+router.get('/board/getTaskPerBoard', async (req, res) => {
+    try {
         const arr = await axios.get("http://localhost:8000/board/getTaskPerBoard");
 
         res.send(arr.data)
-    }catch  {
+    } catch {
         res.sendStatus(500)
+    }
+});
+
+router.post('/board/register', async (req, res) => {
+    try {
+        const user = await axios.post("http://localhost:8000/register",{
+            fullname:req.body.fullname,
+            mail:req.body.mail,
+            username:req.body.username,
+            password:req.body.password
+        })
+        res.send(user.data);
+    } catch {
+        res.sendStatus(500);
     }
 })
 

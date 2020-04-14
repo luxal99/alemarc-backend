@@ -21,4 +21,6 @@ export class User extends BaseEntity {
     @JoinColumn()
     id_client: Client;
 
+
+
 }
