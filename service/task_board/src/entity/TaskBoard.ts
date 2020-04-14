@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, BaseEntity} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, BaseEntity, ManyToOne} from "typeorm";
 import {TaskCard} from "./TaskCard";
+import {Client} from "./Client";
 
 @Entity()
 export class TaskBoard extends BaseEntity{
@@ -10,8 +11,12 @@ export class TaskBoard extends BaseEntity{
     @Column()
     title: string;
 
+
     @OneToMany(type => TaskCard,cardList=>cardList.id_task_board)
     cardList:TaskCard[]
+
+    @ManyToOne(type => Client,id_client=>id_client)
+    id_client:Client;
 
 
 

@@ -1,18 +1,24 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, BaseEntity, JoinColumn} from "typeorm";
+import {UserRole} from "./UserRole";
+import {Client} from "./Client";
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id_user: number;
 
     @Column()
-    firstName: string;
+    username: string;
 
     @Column()
-    lastName: string;
+    password: string;
 
-    @Column()
-    age: number;
+    @ManyToOne(type => UserRole, id_user_role => id_user_role)
+    id_user_role: UserRole;
+
+    @OneToOne(type => Client)
+    @JoinColumn()
+    id_client: Client;
 
 }

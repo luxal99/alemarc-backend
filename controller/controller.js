@@ -75,7 +75,6 @@ router.put('/board/unArchiveAll',async (req,res)=>{
 })
 
 router.put('/board/updateTask', async (req, res) => {
-    console.log(req.body)
     try {
         const task = axios.put("http://localhost:8000/board/updateTask", {
             id_task_card: req.body.id_task_card,

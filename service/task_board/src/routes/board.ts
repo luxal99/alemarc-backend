@@ -1,12 +1,16 @@
 import express = require("express");
+import bodyParser = require("body-parser");
+import bcrypt = require("bcrypt");
 import {TaskBoard} from "../entity/TaskBoard";
 import {Application, Request, Response} from "express";
-import bodyParser = require("body-parser");
-import  cors = require("cors");
 import {TaskCard} from "../entity/TaskCard";
 import {CardStatus} from "../entity/CardStatus";
 import {CardAttachment} from "../entity/CardAttachment";
-import {getConnection} from "typeorm";
+import {getConnection, getRepository} from "typeorm";
+import {Client} from "../entity/Client";
+import {User} from "../entity/User";
+import {where} from "sequelize";
+import {UserRole} from "../entity/UserRole";
 
 export class App {
     public app: Application;
@@ -65,7 +69,6 @@ export class App {
 
         this.app.post('/board/createTask', async (req: Request, res: Response) => {
 
-            console.log(req.body)
             try {
 
                 const taskCard = new TaskCard();
@@ -106,7 +109,6 @@ export class App {
         })
 
         this.app.get('/board/getTasks/:id_task_board', async (req, res) => {
-            console.log(req.params);
             try {
 
                 const list = await TaskCard.find({
@@ -121,7 +123,6 @@ export class App {
         })
 
         this.app.put('/board/updateTask', async (req: Request, res: Response) => {
-            console.log(req.body)
             try {
                 await getConnection().createQueryBuilder().update(TaskCard).set({
                     header: req.body.header,
@@ -139,10 +140,10 @@ export class App {
 
         this.app.put('/board/unArchiveAll', async (req: Request, res: Response) => {
             try {
-                for (const task of req.body.taskList){
+                for (const task of req.body.taskList) {
                     await getConnection().createQueryBuilder().update(TaskCard).set({
-                        visible:true
-                    }).where("id_task_card = :id_task_card",{id_task_card:task.id_task_card}).execute()
+                        visible: true
+                    }).where("id_task_card = :id_task_card", {id_task_card: task.id_task_card}).execute()
                     res.sendStatus(200);
                 }
             } catch {
@@ -191,6 +192,59 @@ export class App {
             }
         })
         //endregion
+
+        //region -- Registration --
+
+        this.app.post("/register", async (req: Request, res: Response) => {
+
+            try {
+
+
+                const checkUsername = await User.findOne({username: req.body.username});
+
+                if (checkUsername === undefined) {
+
+                    const user = new User();
+                    user.username = req.body.username;
+                    user.password = await bcrypt.hash(req.body.password, 10);
+
+                    user.id_user_role = await getRepository(UserRole).findOne({
+                        where:{role_name:'ADMIN'}
+                    });
+
+                    await User.save(user).then(async () => {
+
+                        const client = new Client();
+                        client.name = req.body.name;
+                        client.lastname = req.body.lastname;
+                        client.mail = req.body.mail;
+
+                        await Client.save(client).catch(() => {
+                            res.send("Not saved");
+                        });
+                        await getConnection().createQueryBuilder().update(User).set({
+                            id_client:client
+                        }).where("id_user = :id_user",{id_user:user.id_user}).execute();
+
+                    }).catch(()=>{
+                        res.send("User not saved");
+                    });
+
+
+                    res.sendStatus(200);
+
+                } else {
+
+                    res.send("Korisnicko ime je zauzeto")
+                }
+            } catch {
+                res.sendStatus(500)
+            }
+
+        })
+
+        //endregion
+
 
     }
 

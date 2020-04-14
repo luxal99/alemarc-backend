@@ -33,6 +33,6 @@ export class TaskCard extends BaseEntity{
     id_card_status: CardStatus;
 
     @OneToMany(type => CardAttachment,cardAttachmentList=>cardAttachmentList.id_task_card)
-    cardAttachmentList:CardAttachment[]
+    cardAttachmentList:CardAttachment[];
 
 }
