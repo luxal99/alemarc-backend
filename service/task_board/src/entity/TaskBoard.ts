@@ -13,7 +13,7 @@ export class TaskBoard extends BaseEntity{
 
 
     @OneToMany(type => TaskCard,cardList=>cardList.id_task_board)
-    cardList:TaskCard[]
+    cardList:TaskCard[];
 
     @ManyToOne(type => Client,id_client=>id_client)
     id_client:Client;

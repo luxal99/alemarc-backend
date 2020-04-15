@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="acf96462-14be-4f4b-b6b9-34b9e22107b5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/task_board/src/entity/TaskBoard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/task_board/src/entity/TaskBoard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/task_board/src/entity/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/task_board/src/entity/User.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/task_board/src/routes/board.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/task_board/src/routes/board.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -151,7 +152,7 @@
       <workItem from="1586793405841" duration="117000" />
       <workItem from="1586793608083" duration="5146000" />
       <workItem from="1586850834929" duration="21772000" />
-      <workItem from="1586936222197" duration="3094000" />
+      <workItem from="1586936222197" duration="4835000" />
     </task>
     <task id="LOCAL-00001" summary="Izmena baze">
       <created>1584058447109</created>

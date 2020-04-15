@@ -13,6 +13,7 @@ import {UserValidation} from "../service/UserValidation";
 import {where} from "sequelize";
 import {UserRole} from "../entity/UserRole";
 import {load} from "dotenv";
+import {Admin} from "../entity/Admin";
 
 export class App {
     public app: Application;
@@ -145,6 +146,44 @@ export class App {
                 }
             } catch {
                 res.send("Input error");
+            }
+        })
+
+        this.app.post('/board/createAdmin', async (req: Request, res: Response) => {
+            try {
+                const checkUsername = await User.findOne({username: req.body.username});
+
+                if (checkUsername === undefined) {
+
+                    const user = new User();
+
+                    user.username = req.body.username;
+                    user.password = await bcrypt.hash(req.body.password, 10);
+
+                    await User.save(user).then(async () => {
+
+                        const admin = new Admin();
+                        admin.full_name = req.body.full_name;
+
+                        await Admin.save(admin).then(async () => {
+                            await getConnection().createQueryBuilder().update(User).set({
+                                id_admin:admin
+                            }).where("id_user = :id_user", {id_user: user.id_user}).execute();
+
+                            res.sendStatus(200);
+                        })
+
+
+
+                    })
+
+
+                } else {
+                    res.send("Username already in use")
+                }
+
+            } catch {
+                res.sendStatus(500)
             }
         })
     }

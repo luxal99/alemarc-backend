@@ -1,6 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, BaseEntity, JoinColumn} from "typeorm";
 import {UserRole} from "./UserRole";
 import {Client} from "./Client";
+import {Admin} from "./Admin";
 
 @Entity()
 export class User extends BaseEntity {
@@ -20,6 +21,10 @@ export class User extends BaseEntity {
     @OneToOne(type => Client)
     @JoinColumn()
     id_client: Client;
+
+    @OneToOne(type => Admin)
+    @JoinColumn()
+    id_admin: Admin;
 
 
 
