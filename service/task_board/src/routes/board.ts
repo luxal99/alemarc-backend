@@ -47,7 +47,7 @@ export class App {
                     user.username = req.body.username;
                     user.password = await bcrypt.hash(req.body.password, 10);
                     user.id_user_role = await getRepository(UserRole).findOne({
-                        where: {role_name: 'ADMIN'}
+                        where: {role_name: 'CLIENT'}
                     });
 
                     UserValidation.validateUsername(user.username);
@@ -89,7 +89,7 @@ export class App {
             try {
                 const user = await User.find({
                     where: {username: req.body.username},
-                    relations: ['id_client', 'id_client.taskBoardList']
+                    relations: ['id_client', 'id_client.taskBoardList','id_admin','id_user_role']
                 });
                 if (await bcrypt.compare(req.body.password, user[0].password)) {
                     res.send(user)
