@@ -186,14 +186,29 @@ router.get('/board/getBoardPerUser/:id_client', async (req, res) => {
     }
 });
 
-router.get('/board/getUserProfile/:id_client',async (req,res)=>{
-    try{
+router.get('/board/getUserProfile/:id_client', async (req, res) => {
+    try {
         const userProfile = await axios.get(`http://localhost:8000/board/getUserProfile/${req.params.id_client}`);
         res.send(userProfile.data);
-    }catch  {
+    } catch {
         res.send("Error")
     }
 })
 
+
+router.put('/board/changePassword', async (req, res) => {
+    try {
+        const updatePassword = await axios.put("http://localhost:8000/board/changePassword", {
+            username: req.body.username,
+            old_password: req.body.old_password,
+            new_password: req.body.new_password
+        });
+
+        res.send(updatePassword.data);
+    } catch {
+        res.send("Input error");
+    }
+
+});
 module.exports = router;
 module.exports = app;

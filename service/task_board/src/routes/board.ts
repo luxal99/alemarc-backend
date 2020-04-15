@@ -20,7 +20,6 @@ export class App {
     constructor() {
         this.app = express();
         this.plugins();
-        // this.app.use(this.router);
         this.routes();
     }
 
@@ -29,7 +28,128 @@ export class App {
     }
 
     protected routes() {
+        this.userRoutes();
+        this.taskBoardRoutes()
+    }
 
+    protected userRoutes() {
+        //region -- Registration --
+
+        this.app.post("/register", async (req: Request, res: Response) => {
+
+            try {
+                const checkUsername = await User.findOne({username: req.body.username});
+
+                if (checkUsername === undefined) {
+
+                    const user = new User();
+                    user.username = req.body.username;
+                    user.password = await bcrypt.hash(req.body.password, 10);
+                    user.id_user_role = await getRepository(UserRole).findOne({
+                        where: {role_name: 'ADMIN'}
+                    });
+
+                    UserValidation.validateUsername(user.username);
+                    UserValidation.validatePassword(req.body.password);
+
+                    await User.save(user).then(async () => {
+
+                        const client = new Client();
+                        client.fullname = req.body.fullname;
+                        client.mail = req.body.mail;
+
+                        await Client.save(client).catch(() => {
+                            res.send("Not saved");
+                        });
+                        await getConnection().createQueryBuilder().update(User).set({
+                            id_client: client
+                        }).where("id_user = :id_user", {id_user: user.id_user}).execute();
+
+                    }).catch(() => {
+                        res.send("User not saved");
+                    });
+
+
+                    res.sendStatus(200);
+
+                } else {
+
+                    res.send("Korisnicko ime je zauzeto")
+                }
+            } catch {
+                res.send("Input error")
+            }
+
+        });
+
+        this.app.post('/checkUser', async (req: Request, res: Response) => {
+
+            console.log(req.body)
+            try {
+                const user = await User.find({
+                    where: {username: req.body.username},
+                    relations: ['id_client', 'id_client.taskBoardList']
+                });
+                if (await bcrypt.compare(req.body.password, user[0].password)) {
+                    res.send(user)
+                } else {
+                    res.send("Password error")
+                }
+            } catch (error) {
+                error = new UserValidation("Not valid");
+                res.send(error)
+            }
+        })
+
+        //endregion
+
+        this.app.get('/board/getBoardPerUser/:id_client', async (req: Request, res: Response) => {
+            try {
+                const taskByUser = await Client.find({
+                    where: {id_client: req.params.id_client},
+                    relations: ['taskBoardList', 'taskBoardList.cardList']
+                });
+                res.send(taskByUser);
+            } catch {
+                res.send("Error")
+            }
+        });
+
+        this.app.get('/board/getUserProfile/:id_client', async (req: Request, res: Response) => {
+
+            try {
+                const user = await getConnection().query(`select * from task_table.client 
+                join user u on client.id_client = u.idClientIdClient where id_client = ${req.params.id_client};`);
+
+
+                res.send(user);
+            } catch {
+                res.send("Error")
+            }
+        });
+
+        this.app.put('/board/changePassword', async (req: Request, res: Response) => {
+            try {
+                const user = await User.findOne({where: {username: req.body.username}});
+                const isPasswordMatch = await bcrypt.compare(req.body.old_password, user.password);
+
+                if (isPasswordMatch) {
+                    const newHashedPassword = await bcrypt.hash(req.body.new_password, 10);
+                    await getConnection().createQueryBuilder().update(User).set({
+                        password: newHashedPassword
+                    }).where("id_user=:id_user", {id_user: user.id_user}).execute();
+
+                    res.send("Password changed")
+                } else {
+                    res.send("Password not match")
+                }
+            } catch {
+                res.send("Input error");
+            }
+        })
+    }
+
+    protected taskBoardRoutes() {
         //region -- Board --
         this.app.get('/board/getBoard', async (req: Request, res: Response) => {
             try {
@@ -194,98 +314,6 @@ export class App {
             }
         })
         //endregion
-
-        //region -- Registration --
-
-        this.app.post("/register", async (req: Request, res: Response) => {
-
-            try {
-                const checkUsername = await User.findOne({username: req.body.username});
-
-                if (checkUsername === undefined) {
-
-                    const user = new User();
-                    user.username = req.body.username;
-                    user.password = await bcrypt.hash(req.body.password, 10);
-                    user.id_user_role = await getRepository(UserRole).findOne({
-                        where: {role_name: 'ADMIN'}
-                    });
-
-                    UserValidation.validateUsername(user.username);
-                    UserValidation.validatePassword(req.body.password);
-
-                    await User.save(user).then(async () => {
-
-                        const client = new Client();
-                        client.fullname = req.body.fullname;
-                        client.mail = req.body.mail;
-
-                        await Client.save(client).catch(() => {
-                            res.send("Not saved");
-                        });
-                        await getConnection().createQueryBuilder().update(User).set({
-                            id_client: client
-                        }).where("id_user = :id_user", {id_user: user.id_user}).execute();
-
-                    }).catch(() => {
-                        res.send("User not saved");
-                    });
-
-
-                    res.sendStatus(200);
-
-                } else {
-
-                    res.send("Korisnicko ime je zauzeto")
-                }
-            } catch {
-                res.send("Input error")
-            }
-
-        });
-
-        this.app.post('/checkUser', async (req: Request, res: Response) => {
-
-            console.log(req.body)
-            try {
-                const user = await User.find({where: {username: req.body.username},relations:['id_client','id_client.taskBoardList']});
-                if (await bcrypt.compare(req.body.password, user[0].password)) {
-                    res.send(user)
-                } else {
-                    res.send("Password error")
-                }
-            } catch (error) {
-                error = new UserValidation("Not valid");
-                res.send(error)
-            }
-        })
-
-        //endregion
-
-        this.app.get('/board/getBoardPerUser/:id_client',async (req:Request,res:Response)=>{
-            try{
-                const taskByUser = await Client.find({where:{id_client:req.params.id_client},relations:['taskBoardList','taskBoardList.cardList']});
-                res.send(taskByUser);
-            }catch  {
-                res.send("Error")
-            }
-        })
-
-        this.app.get('/board/getUserProfile/:id_client', async (req:Request,res:Response)=>{
-
-            try{
-                const user = await getConnection().query(`select * from task_table.client 
-                join user u on client.id_client = u.idClientIdClient where id_client = ${req.params.id_client};`);
-
-
-
-                res.send(user);
-            }catch  {
-                res.send("Error")
-            }
-        })
-
     }
-
 
 }
