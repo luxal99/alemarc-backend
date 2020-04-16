@@ -10,4 +10,7 @@ export class Admin extends BaseEntity{
     @Column()
     full_name: string;
 
+    secretKey:string;
+
+
 }

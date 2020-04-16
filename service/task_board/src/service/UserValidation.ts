@@ -1,5 +1,10 @@
 import bcrypt = require("bcrypt");
+import crypto = require("crypto");
+import {Json} from "sequelize/types/lib/utils";
 
+
+const algorithm = 'aes-256-gcm';
+const password = '3zTvzr3p67VC61jmV54rIYu1545x4TlY';
 
 export class UserValidation extends Error {
 
@@ -26,6 +31,17 @@ export class UserValidation extends Error {
     constructor(message: string) {
         super(message);
     }
+
+
+    static encrypt(id){
+       var key = crypto.createHmac('sha256',id).digest('hex');
+       return key;
+    }
+
+    static decrypt(hmac){
+
+    }
+
 
 
 }

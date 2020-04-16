@@ -1,6 +1,7 @@
 import express = require("express");
 import bodyParser = require("body-parser");
 import bcrypt = require("bcrypt");
+import crypto = require("crypto")
 import {TaskBoard} from "../entity/TaskBoard";
 import {Application, Request, Response} from "express";
 import {TaskCard} from "../entity/TaskCard";
@@ -35,11 +36,11 @@ export class App {
 
     protected userRoutes() {
         //region -- Registration --
-
         this.app.post("/register", async (req: Request, res: Response) => {
 
             try {
                 const checkUsername = await User.findOne({username: req.body.username});
+
 
                 if (checkUsername === undefined) {
 
@@ -82,17 +83,35 @@ export class App {
             }
 
         });
+        //endregion
+
+        //region -- Login
 
         this.app.post('/checkUser', async (req: Request, res: Response) => {
-
-            console.log(req.body)
             try {
                 const user = await User.find({
                     where: {username: req.body.username},
-                    relations: ['id_client', 'id_client.taskBoardList','id_admin','id_user_role']
+                    relations: ['id_client',
+                        'id_client.taskBoardList',
+                        'id_client.taskBoardList.cardList',
+                        'id_client.taskBoardList.cardList.id_card_status',
+                        'id_client.taskBoardList.cardList.cardAttachmentList',
+                        'id_admin', 'id_user_role']
                 });
+
+
                 if (await bcrypt.compare(req.body.password, user[0].password)) {
-                    res.send(user)
+
+                    if (user[0].id_user_role.role_name === 'CLIENT') {
+                        const secretKey = UserValidation.encrypt(JSON.stringify(user[0].id_client.id_client))
+                        user[0].id_client.secretKey = secretKey;
+                        res.send(user)
+                    } else if (user[0].id_user_role.role_name === 'ADMIN') {
+                        const secretKey = UserValidation.encrypt(JSON.stringify(user[0].id_admin.id_admin))
+                        user[0].id_admin.secretKey = secretKey;
+                        res.send(user)
+                    }
+
                 } else {
                     res.send("Password error")
                 }
@@ -116,14 +135,20 @@ export class App {
             }
         });
 
-        this.app.get('/board/getUserProfile/:id_client', async (req: Request, res: Response) => {
+        this.app.post('/board/getUserProfile', async (req: Request, res: Response) => {
+
 
             try {
                 const user = await getConnection().query(`select * from task_table.client 
-                join user u on client.id_client = u.idClientIdClient where id_client = ${req.params.id_client};`);
+                join user u on client.id_client = u.idClientIdClient where id_client = ${req.body.id_client};`);
+                const trustedKey = UserValidation.encrypt(JSON.stringify(user[0].id_client));
 
+                if (trustedKey === req.body.secretKey) {
+                    res.send(user);
+                } else {
+                    res.sendStatus(403)
+                }
 
-                res.send(user);
             } catch {
                 res.send("Error")
             }
@@ -147,7 +172,7 @@ export class App {
             } catch {
                 res.send("Input error");
             }
-        })
+        });
 
         this.app.post('/board/createAdmin', async (req: Request, res: Response) => {
             try {
@@ -167,12 +192,11 @@ export class App {
 
                         await Admin.save(admin).then(async () => {
                             await getConnection().createQueryBuilder().update(User).set({
-                                id_admin:admin
+                                id_admin: admin
                             }).where("id_user = :id_user", {id_user: user.id_user}).execute();
 
                             res.sendStatus(200);
                         })
-
 
 
                     })
@@ -185,6 +209,32 @@ export class App {
             } catch {
                 res.sendStatus(500)
             }
+        });
+
+        this.app.post('/board/getUserByKey', async (req: Request, res: Response) => {
+            console.log(req.body.key)
+            try {
+                let searchedlLient = null;
+
+                const allUsers = await User.find({
+                    relations: ['id_client', 'id_client.taskBoardList',
+                        'id_client.taskBoardList.cardList', '' +
+                        'id_client.taskBoardList.cardList.cardAttachmentList', 'id_client.taskBoardList.cardList.id_card_status']
+                });
+                for (const client of allUsers) {
+                    let validKey = UserValidation.encrypt(JSON.stringify(client.id_client.id_client));
+
+                    if (validKey === req.body.key) {
+                        res.send(client)
+                        break;
+                    }
+                }
+
+
+            } catch {
+                res.sendStatus(500)
+            }
+
         })
     }
 
@@ -199,11 +249,24 @@ export class App {
             }
         });
 
+        this.app.get('/board/getBoardByIdClient/:id_client', async (req: Request, res: Response) => {
+
+            try {
+
+                const boards = await TaskBoard.find({where: {id_client: req.params.id_client},
+                relations:['cardList','cardList.id_card_status','cardList.cardAttachmentList']})
+                res.send(boards);
+            } catch {
+                res.sendStatus(500)
+            }
+        })
         this.app.post('/board/createBoard', async (req: Request, res: Response) => {
             try {
 
+
                 const board = new TaskBoard();
                 board.title = req.body.title;
+                board.id_client = req.body.id_client;
                 await TaskBoard.save(board);
 
                 res.sendStatus(200)

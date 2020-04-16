@@ -13,14 +13,24 @@ app.use(cors());
 app.use(fileUpload());
 
 router.post('/createBoard', async (req, res) => {
-
+    console.log('CONTROLLER: ',req.body.client)
     try {
         const board = await axios.post('http://localhost:8000/board/createBoard', {
-            title: req.body.title
+            title: req.body.title,
+            id_client:req.body.id_client
         });
 
         res.send(board.data);
     } catch {
+        res.sendStatus(500)
+    }
+});
+
+router.get('/board/getBoardByIdClient/:id_client',async (req, res) => {
+    try{
+        boardById = await axios.get(`http://localhost:8000/board/getBoardByIdClient/${req.params.id_client}`);
+        res.send(boardById.data);
+    }catch  {
         res.sendStatus(500)
     }
 })
@@ -186,9 +196,12 @@ router.get('/board/getBoardPerUser/:id_client', async (req, res) => {
     }
 });
 
-router.get('/board/getUserProfile/:id_client', async (req, res) => {
+router.post('/board/getUserProfile', async (req, res) => {
     try {
-        const userProfile = await axios.get(`http://localhost:8000/board/getUserProfile/${req.params.id_client}`);
+        const userProfile = await axios.post(`http://localhost:8000/board/getUserProfile`,{
+            secretKey:req.body.secretKey,
+            id_client:req.body.id_client
+        });
         res.send(userProfile.data);
     } catch {
         res.send("Error")
@@ -210,5 +223,17 @@ router.put('/board/changePassword', async (req, res) => {
     }
 
 });
+
+router.post("/board/getUserByKey",async (req,res)=>{
+    try{
+        const user = await axios.post("http://localhost:8000/board/getUserByKey",{
+            key:req.body.key
+        });
+
+        res.send(user.data);
+    }catch  {
+        res.sendStatus(403)
+    }
+})
 module.exports = router;
 module.exports = app;

@@ -14,6 +14,10 @@ export class Client extends BaseEntity{
     @Column()
     mail: string;
 
+    secretKey:string;
+
     @OneToMany(type => TaskBoard, taskBoardList => taskBoardList.id_client)
     taskBoardList: TaskBoard[];
+
+
 }
