@@ -253,8 +253,10 @@ export class App {
 
             try {
 
-                const boards = await TaskBoard.find({where: {id_client: req.params.id_client},
-                relations:['cardList','cardList.id_card_status','cardList.cardAttachmentList']})
+                const boards = await TaskBoard.find({
+                    where: {id_client: req.params.id_client},
+                    relations: ['cardList', 'cardList.id_card_status', 'cardList.cardAttachmentList']
+                })
                 res.send(boards);
             } catch {
                 res.sendStatus(500)
@@ -330,6 +332,21 @@ export class App {
                 'group by idCardStatusIdCardStatus');
 
             res.send(arr);
+        });
+
+        this.app.get('/board/getTaskAnalizeByIdClient/:id_client', async (req: Request, res: Response) => {
+            try {
+                const analyze = await getConnection().query(`select cs.title, count(id_task_card) as num_of_tasks
+from task_card
+         join card_status cs on task_card.idCardStatusIdCardStatus = cs.id_card_status
+         join task_board tb on task_card.idTaskBoardIdTaskBoard = tb.id_task_board where idClientIdClient = ${req.params.id_client}
+group by idCardStatusIdCardStatus`);
+
+                res.send(analyze);
+
+            } catch {
+                res.sendStatus(500);
+            }
         })
 
         this.app.get('/board/getTasks/:id_task_board', async (req, res) => {
