@@ -13,11 +13,11 @@ app.use(cors());
 app.use(fileUpload());
 
 router.post('/createBoard', async (req, res) => {
-    console.log('CONTROLLER: ',req.body.client)
+    console.log('CONTROLLER: ', req.body.client)
     try {
         const board = await axios.post('http://localhost:8000/board/createBoard', {
             title: req.body.title,
-            id_client:req.body.id_client
+            id_client: req.body.id_client
         });
 
         res.send(board.data);
@@ -26,11 +26,11 @@ router.post('/createBoard', async (req, res) => {
     }
 });
 
-router.get('/board/getBoardByIdClient/:id_client',async (req, res) => {
-    try{
+router.get('/board/getBoardByIdClient/:id_client', async (req, res) => {
+    try {
         boardById = await axios.get(`http://localhost:8000/board/getBoardByIdClient/${req.params.id_client}`);
         res.send(boardById.data);
-    }catch  {
+    } catch {
         res.sendStatus(500)
     }
 })
@@ -174,7 +174,7 @@ router.post('/board/register', async (req, res) => {
 
 router.post('/board/login', async (req, res) => {
 
-    console.log(req.body)
+    console.log(req.body);
     try {
         const user = await axios.post("http://localhost:8000/checkUser", {
             username: req.body.username,
@@ -198,15 +198,15 @@ router.get('/board/getBoardPerUser/:id_client', async (req, res) => {
 
 router.post('/board/getUserProfile', async (req, res) => {
     try {
-        const userProfile = await axios.post(`http://localhost:8000/board/getUserProfile`,{
-            secretKey:req.body.secretKey,
-            id_client:req.body.id_client
+        const userProfile = await axios.post(`http://localhost:8000/board/getUserProfile`, {
+            secretKey: req.body.secretKey,
+            id_client: req.body.id_client
         });
         res.send(userProfile.data);
     } catch {
         res.send("Error")
     }
-})
+});
 
 
 router.put('/board/changePassword', async (req, res) => {
@@ -224,16 +224,17 @@ router.put('/board/changePassword', async (req, res) => {
 
 });
 
-router.post("/board/getUserByKey",async (req,res)=>{
-    try{
-        const user = await axios.post("http://localhost:8000/board/getUserByKey",{
-            key:req.body.key
+router.post("/board/getUserByKey", async (req, res) => {
+    try {
+        const user = await axios.post("http://localhost:8000/board/getUserByKey", {
+            key: req.body.key
         });
 
         res.send(user.data);
-    }catch  {
+    } catch {
         res.sendStatus(403)
     }
-})
+});
+
 module.exports = router;
 module.exports = app;

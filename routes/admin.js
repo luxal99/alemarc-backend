@@ -316,7 +316,7 @@ router.get('/getBlogs', async (req, res) => {
     } catch {
 
     }
-})
+});
 
 router.post('/board/upload', function (req, res) {
     console.log(req.body.files)
@@ -335,6 +335,8 @@ router.post('/board/upload', function (req, res) {
         res.sendStatus(404);
     });
 });
+
+
 
 
 

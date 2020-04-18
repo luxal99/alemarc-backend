@@ -1,6 +1,7 @@
 import express = require("express");
 import bodyParser = require("body-parser");
 import bcrypt = require("bcrypt");
+const FormData = require('form-data');
 import crypto = require("crypto")
 import {TaskBoard} from "../entity/TaskBoard";
 import {Application, Request, Response} from "express";
@@ -212,7 +213,7 @@ export class App {
         });
 
         this.app.post('/board/getUserByKey', async (req: Request, res: Response) => {
-            console.log(req.body.key)
+
             try {
                 let searchedlLient = null;
 
@@ -417,6 +418,7 @@ group by idCardStatusIdCardStatus`);
 
 
         this.app.post('/board/addNewAttachment', async (req: Request, res: Response) => {
+
             try {
                 for (const element of req.body.cardAttachmentList) {
                     var cardAttachment = new CardAttachment();
@@ -433,6 +435,8 @@ group by idCardStatusIdCardStatus`);
             }
         })
         //endregion
+
+
     }
 
 }
