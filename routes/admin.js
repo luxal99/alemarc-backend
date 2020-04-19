@@ -251,23 +251,6 @@ router.post('/logout', (req, res) => {
 
 //region -- Blog --
 
-router.post('/upload', function (req, res) {
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
-    }
-
-    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-    let sampleFile = req.files.image_url;
-
-    // Use the mv() method to place the file somewhere on your server
-    sampleFile.mv(`../alemarc-frontend/src/assets/img/blog/${sampleFile.name}`, function (err) {
-        if (err)
-            return res.status(500).send(err);
-
-        res.send(sampleFile.name);
-    });
-});
-
 router.post('/saveBlog', (req, res) => {
     console.log(req.body)
     try {
@@ -299,7 +282,7 @@ router.get('/getOneBlog/:_id', async (req, res) => {
     } catch {
         res.send("Can not find")
     }
-})
+});
 router.delete("/deleteBlog/:_id", async (req, res) => {
     try {
         const removedOrder = await Blog.deleteOne({_id: req.params._id});
@@ -307,37 +290,16 @@ router.delete("/deleteBlog/:_id", async (req, res) => {
     } catch {
 
     }
-})
+});
 
 router.get('/getBlogs', async (req, res) => {
     try {
-        blog = await Blog.find();
+        const blog = await Blog.find();
         res.send(blog);
     } catch {
-
+            res.sendStatus(500);
     }
 });
-
-router.post('/board/upload', function (req, res) {
-    console.log(req.body.files)
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
-    }
-
-    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-    let sampleFile = req.files.image_url;
-
-    // Use the mv() method to place the file somewhere on your server
-    sampleFile.mv(`../alemarc-frontend/src/assets/img/task/${sampleFile.name}`, function (err) {
-        if (err)
-            return res.status(500).send(err);
-
-        res.sendStatus(404);
-    });
-});
-
-
-
 
 
 //endregion
