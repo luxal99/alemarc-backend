@@ -1,7 +1,7 @@
 import express = require("express");
 import {Application, Request, Response} from "express";
-import bodyParser = require("body-parser");
-import bcrypt = require("bcrypt");
+    import bodyParser = require("body-parser");
+    import bcrypt = require("bcrypt");
 import {UserService} from "../service/UserService";
 import {User} from "../entity/User";
 import {TechnologyService} from "../service/TechnologyService";
@@ -66,8 +66,9 @@ export class App {
         this.app.post(`/${this.userRouteName}/auth`, async (req: Request, res: Response) => {
 
             try {
+
                 const user = await new UserService().findByName(req.body.username);
-                const auth = ((user != null && await bcrypt.compare(req.body.password, user.password))
+     		const auth = ((user != null && await bcrypt.compare(req.body.password, user.password))
                     ? res.send(user.password) : res.sendStatus(403))
 
             } catch {
