@@ -12,6 +12,10 @@ export class BlogService extends AbstractService<Blog> {
         await super.delete(entity);
     }
 
+    async getAll(): Promise<Blog[]> {
+        let listOfBlogs: Blog[] = await Blog.find({relations: ['listOfImages', 'listOfTechnologies']});
+        return listOfBlogs.reverse();
+    }
 
     async findById(id): Promise<Blog> {
         return await this.manager.findOne(Blog, {where: {id: id}, relations: ['listOfImages', 'listOfTechnologies']});
@@ -29,6 +33,6 @@ export class BlogService extends AbstractService<Blog> {
         const blogs = await Blog.find({relations: ['listOfImages']})
         blogs.sort((a, b) => (a.numberOfViews > b.numberOfViews ? -1 : 1));
 
-        return blogs.splice(0,3);
+        return blogs.splice(0, 3);
     }
 }

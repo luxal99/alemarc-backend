@@ -101,8 +101,7 @@ export class App {
         })
 
         this.app.get(`/${this.blogRouteName}`, async (req: Request, res: Response) => {
-            const listOfBlogs = await Blog.find({relations: ['listOfImages', 'listOfTechnologies']})
-            res.send(listOfBlogs);
+            res.send(await new BlogService().getAll())
         })
 
         this.app.get(`/${this.blogRouteName}/:id`, async (req: Request, res: Response) => {
