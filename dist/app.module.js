@@ -20,11 +20,12 @@ const user_entity_1 = require("./user/user.entity");
 const technology_entity_1 = require("./technology/technology.entity");
 const message_entity_1 = require("./message/message.entity");
 const blog_entity_1 = require("./blog/blog.entity");
+const blog_module_1 = require("./blog/blog.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     common_1.Module({
-        imports: [image_module_1.ImageModule, message_module_1.MessageModule, technology_module_1.TechnologyModule, user_module_1.UserModule,
+        imports: [image_module_1.ImageModule, message_module_1.MessageModule, technology_module_1.TechnologyModule, user_module_1.UserModule, blog_module_1.BlogModule,
             typeorm_1.TypeOrmModule.forRoot({
                 "type": "mysql",
                 "host": "localhost",

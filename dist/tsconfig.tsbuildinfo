@@ -2146,8 +2146,8 @@
         "signature": "46383b35adb89b63a1fb1dac5bb057e9037f5b729f9f84b4cddff67c6b8c0aa4"
       },
       "../src/generic/generic.service.ts": {
-        "version": "ecf971b2387f6c628ddb2f1eba7c3c160dee55885145517d1d3677e5372c5767",
-        "signature": "daccf019f26b57f369b1e6fd6dd1cd1e8422b2730989962d6baafe020bea5090"
+        "version": "94b768867d5cd991b1f1fc58b11139b2e442523427b75b0728a350d73efe16ea",
+        "signature": "816ce700019539fa1d113765db76d8cb5cff390338426a9bf3398ed2831e93bc"
       },
       "../node_modules/@types/node/globals.d.ts": {
         "version": "e8c639f22dc97e453b42980d71fbefbc915ea31436b327e2b2d7946bdc4ef1a3",
@@ -2366,20 +2366,20 @@
         "signature": "088d420a09a36d241f1ddbdcb553951c02ef0844014727a29712d2ced57edd22"
       },
       "../src/generic/generic.controller.ts": {
-        "version": "af5a2e74a505f42e23d26dddc42fae5ff12db989b5fa5f49974c309c2e19de6d",
-        "signature": "73c289364d4bfd4a6892cd461e68f8ecaa5f3c66c5775a94e2aa6df86c463db7"
+        "version": "f1c5388ea6da47e1fc5ba51cfdcef14fea06823164a2e41a687df6db66b39a40",
+        "signature": "d62bc605492419157aed18698e12200faaec5b918276e0340217e608515816fa"
       },
       "../src/image/image.entity.ts": {
         "version": "70c9121b0449ba91cacd9aa52250853d10dbf88b1fecb567ff9ba0039808f8aa",
         "signature": "a70b22a60c231f95989923af723a3cf0be7166d270dd6ad406ac67e2c3ceddf1"
       },
-      "../src/blog/blog.entity.ts": {
-        "version": "dbaa216e7b628d609024f1f698220dc8ecc2c14a1e72d1e2d7c423b4c1924655",
-        "signature": "fca59e90fe924db65572981d1dde54a31eff0882f1baa757cedcdc03eafabfcc"
-      },
       "../src/generic/base.entity.ts": {
         "version": "965c6dd6492832777440bacb1ad11a15c7876641904c1ab6f4e05821a2dc12c1",
         "signature": "e0bcd5f11aed1fc654d8627744d431231c1c54ad4252234d5dad00377231d406"
+      },
+      "../src/blog/blog.entity.ts": {
+        "version": "bbac1c1008bb1529f63c0234fa17ec21da90b920397222f4e5be19617112335b",
+        "signature": "fa75b4a8a4d0e45095abb9a5cae2f0f2e4f9bfe3d080b5273085cc91c935b4be"
       },
       "../src/technology/technology.entity.ts": {
         "version": "e163e863b1c749823312441f00021d0d18ad1238a48ac3866872835e8b7b5694",
@@ -2390,7 +2390,7 @@
         "signature": "138fec4669848deda9b79d819210cd0bd2952672536855a74e6fc7d9be821feb"
       },
       "../src/technology/technology.service.ts": {
-        "version": "64c43c54362725bd4d91e520ea8e6f559a5160b69a5733b11b94da70aea1e9cd",
+        "version": "cdbaaef7a30a8152089b8abb9acdccc82cac7e8e7ef5600e464574528ac41ec3",
         "signature": "22e7a74fdca2179f7125f668d029514e7d7d0f6a7284ded956ecbadaacea5838"
       },
       "../src/technology/technology.controller.ts": {
@@ -2945,21 +2945,29 @@
         "version": "1142f74fd7c62bc9af32f9ca534b8158cf12c9ff99fdd1d42264249f00767213",
         "signature": "620c0918283de642063d16f1a21a94802dd1747ab3ed46f7a4f3f3dd2290ebed"
       },
+      "../src/repository/blog.repository.ts": {
+        "version": "826a8a535fd9f2cbdaf4337dfb464c1ea9b6162374c18fd73827775b230984c0",
+        "signature": "bd1ceed944ad6a32fd2d4ff44af367750d69eed41a13045a77e6898d594b2df6"
+      },
+      "../src/blog/blog.service.ts": {
+        "version": "11523e2d76a1a768f6adc44df0a87103740c9ae49b0c41982197bd8dae59c0e7",
+        "signature": "8dd209fe5b6556bcb05969864ec9456cc4fb865e453989fd2f9ff29da8f8dc7a"
+      },
+      "../src/blog/blog.controller.ts": {
+        "version": "6d30801cb0450b86fc7a7f7e41778523d68fa559e9d8c0449a706c45a0283cd6",
+        "signature": "fe0488b915c559160565b783d65c3b83fdc889799ab5414da9f81f062bb3372f"
+      },
+      "../src/blog/blog.module.ts": {
+        "version": "9632b6d9a14ed30e825752c787966969c8b5bbd8af96e6213e75168b6dbdede5",
+        "signature": "6fa658249410791406531ffae8fd703a370b64eec0a5f5919722951046812861"
+      },
       "../src/app.module.ts": {
-        "version": "f2c0f53a284120a544a9b89e7b96c08b873b63c669374180e2c93712947ff566",
+        "version": "eab48fc1e5a815326250194f8475d8b28e6ec0a57de7377a72a2f93c1881d113",
         "signature": "b82491e2990291580288c5602d4c017238977749d52b17391f0e45d9a29be644"
       },
       "../src/main.ts": {
         "version": "4e950e61a1722df77a45b83f58bec781ca9b0bc364e7d9aaacd826f1a11e973a",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
-      },
-      "../src/blog/blog.controller.ts": {
-        "version": "ce234b0747c44a7b55ce58f7b0289cca639786e54ace07b966c610c4d305e421",
-        "signature": "b09f89748e906fb8ac3f18ab2b0550094b0619f9a9be9c7f4ea423cd22cdddc9"
-      },
-      "../src/blog/blog.module.ts": {
-        "version": "dd1d12a3bebf15fe45fa5632374f28cfb18593be35d6a5abcd76c3d2de575fc7",
-        "signature": "6fa658249410791406531ffae8fd703a370b64eec0a5f5919722951046812861"
       },
       "../node_modules/@types/cookiejar/index.d.ts": {
         "version": "8d48b8f8a377ade8dd1f000625bc276eea067f2529cc9cafdf082d17142107d6",
@@ -5414,13 +5422,14 @@
         "../node_modules/typeorm/index.d.ts",
         "../src/blog/blog.entity.ts"
       ],
+      "../src/generic/base.entity.ts": [
+        "../node_modules/typeorm/index.d.ts"
+      ],
       "../src/blog/blog.entity.ts": [
         "../node_modules/typeorm/index.d.ts",
         "../src/image/image.entity.ts",
-        "../src/technology/technology.entity.ts"
-      ],
-      "../src/generic/base.entity.ts": [
-        "../node_modules/typeorm/index.d.ts"
+        "../src/technology/technology.entity.ts",
+        "../src/generic/base.entity.ts"
       ],
       "../src/technology/technology.entity.ts": [
         "../node_modules/typeorm/index.d.ts",
@@ -5989,6 +5998,29 @@
         "../node_modules/typeorm/index.d.ts",
         "../node_modules/class-validator/types/index.d.ts"
       ],
+      "../src/repository/blog.repository.ts": [
+        "../node_modules/typeorm/index.d.ts",
+        "../src/blog/blog.entity.ts"
+      ],
+      "../src/blog/blog.service.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../src/generic/generic.service.ts",
+        "../src/blog/blog.entity.ts",
+        "../src/repository/blog.repository.ts"
+      ],
+      "../src/blog/blog.controller.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../src/generic/generic.controller.ts",
+        "../src/blog/blog.entity.ts",
+        "../src/blog/blog.service.ts"
+      ],
+      "../src/blog/blog.module.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../src/blog/blog.controller.ts",
+        "../src/blog/blog.service.ts",
+        "../node_modules/@nestjs/typeorm/index.d.ts",
+        "../src/repository/blog.repository.ts"
+      ],
       "../src/app.module.ts": [
         "../node_modules/@nestjs/common/index.d.ts",
         "../src/app.controller.ts",
@@ -6002,18 +6034,12 @@
         "../src/user/user.entity.ts",
         "../src/technology/technology.entity.ts",
         "../src/message/message.entity.ts",
-        "../src/blog/blog.entity.ts"
+        "../src/blog/blog.entity.ts",
+        "../src/blog/blog.module.ts"
       ],
       "../src/main.ts": [
         "../node_modules/@nestjs/core/index.d.ts",
         "../src/app.module.ts"
-      ],
-      "../src/blog/blog.controller.ts": [
-        "../node_modules/@nestjs/common/index.d.ts"
-      ],
-      "../src/blog/blog.module.ts": [
-        "../node_modules/@nestjs/common/index.d.ts",
-        "../src/blog/blog.controller.ts"
       ],
       "../node_modules/@types/superagent/index.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
@@ -8179,6 +8205,10 @@
         "../node_modules/typeorm/entity-schema/EntitySchemaRelationOptions.d.ts",
         "../node_modules/typeorm/driver/types/ColumnTypes.d.ts"
       ],
+      "../src/generic/generic.service.ts": [
+        "../node_modules/typeorm/index.d.ts",
+        "../src/generic/generic.interface.ts"
+      ],
       "../node_modules/@types/node/child_process.d.ts": [
         "../node_modules/@types/node/events.d.ts",
         "../node_modules/@types/node/net.d.ts",
@@ -8364,6 +8394,10 @@
         "../node_modules/@types/express-serve-static-core/index.d.ts",
         "../node_modules/@types/qs/index.d.ts"
       ],
+      "../src/generic/generic.controller.ts": [
+        "../src/generic/generic.service.ts",
+        "../node_modules/@types/express/index.d.ts"
+      ],
       "../src/image/image.entity.ts": [
         "../src/blog/blog.entity.ts",
         "../node_modules/typeorm/index.d.ts"
@@ -8371,11 +8405,25 @@
       "../src/blog/blog.entity.ts": [
         "../src/image/image.entity.ts",
         "../src/technology/technology.entity.ts",
-        "../node_modules/typeorm/index.d.ts"
+        "../src/generic/base.entity.ts"
       ],
       "../src/technology/technology.entity.ts": [
         "../src/blog/blog.entity.ts",
         "../src/generic/base.entity.ts"
+      ],
+      "../src/repository/technology.repository.ts": [
+        "../node_modules/typeorm/index.d.ts",
+        "../src/technology/technology.entity.ts"
+      ],
+      "../src/technology/technology.service.ts": [
+        "../src/repository/technology.repository.ts",
+        "../src/generic/generic.service.ts",
+        "../src/technology/technology.entity.ts"
+      ],
+      "../src/technology/technology.controller.ts": [
+        "../src/technology/technology.service.ts",
+        "../src/generic/generic.controller.ts",
+        "../src/technology/technology.entity.ts"
       ],
       "../node_modules/@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type.d.ts": [
         "../node_modules/typeorm/index.d.ts"
@@ -8908,6 +8956,20 @@
       "../src/message/message.entity.ts": [
         "../node_modules/typeorm/index.d.ts"
       ],
+      "../src/repository/blog.repository.ts": [
+        "../node_modules/typeorm/index.d.ts",
+        "../src/blog/blog.entity.ts"
+      ],
+      "../src/blog/blog.service.ts": [
+        "../src/repository/blog.repository.ts",
+        "../src/generic/generic.service.ts",
+        "../src/blog/blog.entity.ts"
+      ],
+      "../src/blog/blog.controller.ts": [
+        "../src/blog/blog.service.ts",
+        "../src/generic/generic.controller.ts",
+        "../src/blog/blog.entity.ts"
+      ],
       "../node_modules/@types/superagent/index.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/http.d.ts",
@@ -9060,28 +9122,6 @@
       ],
       "../node_modules/@types/yargs/index.d.ts": [
         "../node_modules/@types/yargs-parser/index.d.ts"
-      ],
-      "../src/generic/generic.service.ts": [
-        "../node_modules/typeorm/index.d.ts",
-        "../src/generic/generic.interface.ts"
-      ],
-      "../src/technology/technology.service.ts": [
-        "../src/repository/technology.repository.ts",
-        "../src/generic/generic.service.ts",
-        "../src/technology/technology.entity.ts"
-      ],
-      "../src/technology/technology.controller.ts": [
-        "../src/technology/technology.service.ts",
-        "../src/generic/generic.controller.ts",
-        "../src/technology/technology.entity.ts"
-      ],
-      "../src/generic/generic.controller.ts": [
-        "../src/generic/generic.service.ts",
-        "../node_modules/@types/express/index.d.ts"
-      ],
-      "../src/repository/technology.repository.ts": [
-        "../node_modules/typeorm/index.d.ts",
-        "../src/technology/technology.entity.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -9366,6 +9406,7 @@
       "../src/image/image.module.ts",
       "../src/message/message.controller.ts",
       "../src/message/message.module.ts",
+      "../src/generic/generic.interface.ts",
       "../node_modules/typeorm/schema-builder/options/TableColumnOptions.d.ts",
       "../node_modules/typeorm/schema-builder/table/TableColumn.d.ts",
       "../node_modules/typeorm/common/ObjectLiteral.d.ts",
@@ -9620,6 +9661,7 @@
       "../node_modules/typeorm/migration/MigrationExecutor.d.ts",
       "../node_modules/typeorm/naming-strategy/DefaultNamingStrategy.d.ts",
       "../node_modules/typeorm/index.d.ts",
+      "../src/generic/generic.service.ts",
       "../node_modules/@types/node/globals.d.ts",
       "../node_modules/@types/node/async_hooks.d.ts",
       "../node_modules/@types/node/buffer.d.ts",
@@ -9674,6 +9716,14 @@
       "../node_modules/@types/connect/index.d.ts",
       "../node_modules/@types/body-parser/index.d.ts",
       "../node_modules/@types/express/index.d.ts",
+      "../src/generic/generic.controller.ts",
+      "../src/image/image.entity.ts",
+      "../src/generic/base.entity.ts",
+      "../src/blog/blog.entity.ts",
+      "../src/technology/technology.entity.ts",
+      "../src/repository/technology.repository.ts",
+      "../src/technology/technology.service.ts",
+      "../src/technology/technology.controller.ts",
       "../node_modules/@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type.d.ts",
       "../node_modules/@nestjs/typeorm/dist/common/typeorm.decorators.d.ts",
       "../node_modules/@nestjs/typeorm/dist/common/typeorm.utils.d.ts",
@@ -9683,6 +9733,7 @@
       "../node_modules/@nestjs/typeorm/dist/typeorm.module.d.ts",
       "../node_modules/@nestjs/typeorm/dist/index.d.ts",
       "../node_modules/@nestjs/typeorm/index.d.ts",
+      "../src/technology/technology.module.ts",
       "../src/user/user.controller.ts",
       "../src/user/user.module.ts",
       "../src/user/user.entity.ts",
@@ -9810,11 +9861,15 @@
       "../node_modules/class-validator/types/metadata/MetadataStorage.d.ts",
       "../node_modules/class-validator/types/index.d.ts",
       "../src/message/message.entity.ts",
+      "../src/repository/blog.repository.ts",
       "../src/blog/blog.controller.ts",
       "../src/blog/blog.module.ts",
+      "../src/app.module.ts",
+      "../src/main.ts",
       "../node_modules/@types/cookiejar/index.d.ts",
       "../node_modules/@types/superagent/index.d.ts",
       "../node_modules/@types/supertest/index.d.ts",
+      "../test/app.e2e-spec.ts",
       "../node_modules/@types/anymatch/index.d.ts",
       "../node_modules/@babel/types/lib/index.d.ts",
       "../node_modules/@types/babel__generator/index.d.ts",
@@ -9864,20 +9919,7 @@
       "../node_modules/@types/webpack/index.d.ts",
       "../node_modules/@types/yargs-parser/index.d.ts",
       "../node_modules/@types/yargs/index.d.ts",
-      "../src/generic/generic.interface.ts",
-      "../src/generic/generic.service.ts",
-      "../src/generic/generic.controller.ts",
-      "../src/generic/base.entity.ts",
-      "../src/technology/technology.entity.ts",
-      "../src/repository/technology.repository.ts",
-      "../src/blog/blog.entity.ts",
-      "../src/image/image.entity.ts",
-      "../src/technology/technology.service.ts",
-      "../src/technology/technology.controller.ts",
-      "../src/technology/technology.module.ts",
-      "../src/app.module.ts",
-      "../src/main.ts",
-      "../test/app.e2e-spec.ts"
+      "../src/blog/blog.service.ts"
     ]
   },
   "version": "3.8.3"

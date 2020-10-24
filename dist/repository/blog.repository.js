@@ -6,19 +6,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const common_1 = require("@nestjs/common");
-const blog_controller_1 = require("./blog.controller");
-const blog_service_1 = require("./blog.service");
-const typeorm_1 = require("@nestjs/typeorm");
-const blog_repository_1 = require("../repository/blog.repository");
-let BlogModule = class BlogModule {
+exports.BlogRepository = void 0;
+const typeorm_1 = require("typeorm");
+const blog_entity_1 = require("../blog/blog.entity");
+let BlogRepository = class BlogRepository extends typeorm_1.Repository {
 };
-BlogModule = __decorate([
-    common_1.Module({
-        imports: [typeorm_1.TypeOrmModule.forFeature([blog_repository_1.BlogRepository])],
-        controllers: [blog_controller_1.BlogController],
-        providers: [blog_service_1.BlogService]
-    })
-], BlogModule);
-exports.BlogModule = BlogModule;
-//# sourceMappingURL=blog.module.js.map
+BlogRepository = __decorate([
+    typeorm_1.EntityRepository(blog_entity_1.Blog)
+], BlogRepository);
+exports.BlogRepository = BlogRepository;
+//# sourceMappingURL=blog.repository.js.map

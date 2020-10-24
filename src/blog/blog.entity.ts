@@ -1,13 +1,10 @@
-
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, BaseEntity, JoinTable} from "typeorm";
 import {Image} from "../image/image.entity";
 import {Technology} from "../technology/technology.entity";
+import {Base} from "../generic/base.entity";
 
 @Entity()
-export class Blog extends BaseEntity {
-
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Blog extends Base {
 
     @Column()
     header: string
@@ -15,7 +12,7 @@ export class Blog extends BaseEntity {
     @Column()
     shortText: string;
 
-    @Column({length:10240})
+    @Column({length: 10240})
     longText: string;
 
     @Column()

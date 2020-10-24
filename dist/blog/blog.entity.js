@@ -13,7 +13,8 @@ exports.Blog = void 0;
 const typeorm_1 = require("typeorm");
 const image_entity_1 = require("../image/image.entity");
 const technology_entity_1 = require("../technology/technology.entity");
-let Blog = class Blog extends typeorm_1.BaseEntity {
+const base_entity_1 = require("../generic/base.entity");
+let Blog = class Blog extends base_entity_1.Base {
     constructor(header, shortText, longText, listOfTechnologies) {
         super();
         this.header = header;
@@ -23,10 +24,6 @@ let Blog = class Blog extends typeorm_1.BaseEntity {
         this.numberOfViews = 0;
     }
 };
-__decorate([
-    typeorm_1.PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Blog.prototype, "id", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)

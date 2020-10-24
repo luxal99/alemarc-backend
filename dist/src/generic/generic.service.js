@@ -12,13 +12,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 let GenericService = class GenericService {
-    constructor(genericRepository) {
+    constructor(genericRepository, relations) {
         this.genericRepository = genericRepository;
+        this.relations = relations;
     }
     delete(id) {
     }
     findAll() {
-        return Promise.resolve([]);
+        try {
+            return this.genericRepository.find({ relations: this.relations });
+        }
+        catch (error) {
+            throw new common_1.BadGatewayException(error);
+        }
     }
     findOne(id) {
         return Promise.resolve(undefined);
@@ -37,7 +43,7 @@ let GenericService = class GenericService {
 };
 GenericService = __decorate([
     common_1.Injectable(),
-    __metadata("design:paramtypes", [typeorm_1.Repository])
+    __metadata("design:paramtypes", [typeorm_1.Repository, Array])
 ], GenericService);
 exports.GenericService = GenericService;
 //# sourceMappingURL=generic.service.js.map

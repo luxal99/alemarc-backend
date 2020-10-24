@@ -1,7 +1,13 @@
-import { Module } from '@nestjs/common';
-import { BlogController } from './blog.controller';
+import {Module} from '@nestjs/common';
+import {BlogController} from './blog.controller';
+import {BlogService} from "./blog.service";
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {BlogRepository} from "../repository/blog.repository";
 
 @Module({
-  controllers: [BlogController]
+    imports: [TypeOrmModule.forFeature([BlogRepository])],
+    controllers: [BlogController],
+    providers: [BlogService]
 })
-export class BlogModule {}
+export class BlogModule {
+}

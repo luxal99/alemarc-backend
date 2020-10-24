@@ -6,15 +6,18 @@ import {Repository} from "typeorm";
 export class GenericService<T> implements GenericInterface<T> {
 
     constructor(
-        private readonly genericRepository: Repository<T>
-    ) {
+        private readonly genericRepository: Repository<T>, private relations: Array<string>) {
     }
 
     delete(id: number) {
     }
 
     findAll(): Promise<T[]> {
-        return Promise.resolve([]);
+        try {
+            return this.genericRepository.find({relations: this.relations});
+        } catch (error) {
+            throw new BadGatewayException(error);
+        }
     }
 
     findOne(id: number): Promise<T> {

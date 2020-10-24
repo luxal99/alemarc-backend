@@ -1,8 +1,7 @@
-import { BaseEntity } from "typeorm";
 import { Image } from "../image/image.entity";
 import { Technology } from "../technology/technology.entity";
-export declare class Blog extends BaseEntity {
-    id: number;
+import { Base } from "../generic/base.entity";
+export declare class Blog extends Base {
     header: string;
     shortText: string;
     longText: string;

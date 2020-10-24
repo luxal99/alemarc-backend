@@ -7,6 +7,6 @@ import {TechnologyRepository} from "../repository/technology.repository";
 export class TechnologyService extends GenericService<Technology> {
 
     constructor(private readonly repository: TechnologyRepository) {
-        super(repository);
+        super(repository,[]);
     }
 }

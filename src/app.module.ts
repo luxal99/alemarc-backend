@@ -11,9 +11,10 @@ import {User} from "./user/user.entity";
 import {Technology} from "./technology/technology.entity";
 import {Message} from "./message/message.entity";
 import {Blog} from "./blog/blog.entity";
+import {BlogModule} from "./blog/blog.module";
 
 @Module({
-    imports: [ImageModule, MessageModule, TechnologyModule, UserModule,
+    imports: [ImageModule, MessageModule, TechnologyModule, UserModule,BlogModule,
         TypeOrmModule.forRoot({
                 "type": "mysql",
                 "host": "localhost",

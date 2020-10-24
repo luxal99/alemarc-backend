@@ -15,7 +15,7 @@ const generic_service_1 = require("../generic/generic.service");
 const technology_repository_1 = require("../repository/technology.repository");
 let TechnologyService = class TechnologyService extends generic_service_1.GenericService {
     constructor(repository) {
-        super(repository);
+        super(repository, []);
         this.repository = repository;
     }
 };
