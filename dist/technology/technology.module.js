@@ -10,11 +10,13 @@ exports.TechnologyModule = void 0;
 const common_1 = require("@nestjs/common");
 const technology_controller_1 = require("./technology.controller");
 const technology_service_1 = require("./technology.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const technology_repository_1 = require("../repository/technology.repository");
 let TechnologyModule = class TechnologyModule {
 };
 TechnologyModule = __decorate([
     common_1.Module({
-        imports: [],
+        imports: [typeorm_1.TypeOrmModule.forFeature([technology_repository_1.TechnologyRepository])],
         controllers: [technology_controller_1.TechnologyController],
         providers: [technology_service_1.TechnologyService]
     })

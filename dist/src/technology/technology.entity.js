@@ -11,16 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const blog_entity_1 = require("../blog/blog.entity");
-let Technology = class Technology extends typeorm_1.BaseEntity {
+const base_entity_1 = require("../generic/base.entity");
+let Technology = class Technology extends base_entity_1.Base {
     constructor(title) {
         super();
         this.title = title;
     }
 };
-__decorate([
-    typeorm_1.PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Technology.prototype, "id", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)

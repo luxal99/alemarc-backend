@@ -1,10 +1,10 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, BaseEntity} from "typeorm";
 import {Blog} from "../blog/blog.entity";
-@Entity()
-export class Technology extends BaseEntity {
+import {Base} from "../generic/base.entity";
 
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity()
+export class Technology extends Base {
+
 
     @Column()
     title: string;
