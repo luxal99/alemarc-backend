@@ -1,10 +1,16 @@
 import {GenericService} from "./generic.service";
-import {Body, Get, HttpStatus, Param, Post, Res} from "@nestjs/common";
-import {Response} from "express";
+import {Body, Get, HttpStatus, Param, Post, Req, Res} from "@nestjs/common";
+import {Response, Request} from "express";
+import * as redis from "redis";
 
 export class GenericController<T> {
 
     constructor(private readonly genericService: GenericService<T>) {
+    }
+
+    redisClient = redis.createClient(6379,"127.0.0.1");
+    set = (key, value) => {
+        this.redisClient.set(key, JSON.stringify(value));
     }
 
     @Post()
@@ -17,8 +23,9 @@ export class GenericController<T> {
     }
 
     @Get()
-    async get(@Res() res: Response) {
+    async get(@Res() res: Response, @Req() req: Request) {
         res.send(await this.genericService.findAll())
+        this.set(req.route.path, await this.genericService.findAll());
     }
 
     @Get('/:id')

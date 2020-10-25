@@ -7,7 +7,6 @@ import {getConnection} from "typeorm";
 @Injectable()
 export class BlogService extends GenericService<Blog> {
 
-
     constructor(private readonly repository: BlogRepository) {
         super(repository, ['listOfTechnologies', 'listOfImages']);
     }
@@ -35,4 +34,5 @@ export class BlogService extends GenericService<Blog> {
             .addAndRemove(entity.listOfTechnologies,blog.listOfTechnologies);
 
     }
+
 }
