@@ -13,15 +13,11 @@ export class GenericService<T> implements GenericInterface<T> {
     }
 
     findAll(): Promise<T[]> {
-        try {
-            return this.genericRepository.find({relations: this.relations});
-        } catch (error) {
-            throw new BadGatewayException(error);
-        }
+        return this.genericRepository.find({relations: this.relations});
     }
 
-    findOne(id: number): Promise<T> {
-        return Promise.resolve(undefined);
+    async findOne(id: number): Promise<T> {
+        return await this.genericRepository.findOne(id, {relations: this.relations})
     }
 
     async save(entity: T): Promise<void> {

@@ -1,3 +1,3 @@
 export declare class Base {
-    private id;
+    id: number;
 }

@@ -27,6 +27,14 @@ class GenericController {
     async get(res) {
         res.send(await this.genericService.findAll());
     }
+    async getById(res, id) {
+        try {
+            res.send(await this.genericService.findOne(id));
+        }
+        catch (error) {
+            res.sendStatus(common_1.HttpStatus.BAD_GATEWAY);
+        }
+    }
 }
 __decorate([
     common_1.Post(),
@@ -42,5 +50,12 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], GenericController.prototype, "get", null);
+__decorate([
+    common_1.Get('/:id'),
+    __param(0, common_1.Res()), __param(1, common_1.Param('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], GenericController.prototype, "getById", null);
 exports.GenericController = GenericController;
 //# sourceMappingURL=generic.controller.js.map

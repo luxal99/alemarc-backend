@@ -8,16 +8,49 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const generic_controller_1 = require("../generic/generic.controller");
+const blog_entity_1 = require("./blog.entity");
 const blog_service_1 = require("./blog.service");
 let BlogController = class BlogController extends generic_controller_1.GenericController {
     constructor(service) {
         super(service);
         this.service = service;
     }
+    async getPopular(res) {
+        try {
+            res.send(await this.service.mostPopular());
+        }
+        catch (e) {
+            res.send(common_1.HttpStatus.BAD_GATEWAY);
+        }
+    }
+    async incrementView(entity, res) {
+        await this.service.incrementView(entity.id).then(() => {
+            res.sendStatus(common_1.HttpStatus.OK);
+        }).catch(() => {
+            res.sendStatus(common_1.HttpStatus.BAD_GATEWAY);
+        });
+    }
 };
+__decorate([
+    common_1.Post('/popular'),
+    __param(0, common_1.Res()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], BlogController.prototype, "getPopular", null);
+__decorate([
+    common_1.Put('/view'),
+    __param(0, common_1.Body()), __param(1, common_1.Res()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [blog_entity_1.Blog, Object]),
+    __metadata("design:returntype", Promise)
+], BlogController.prototype, "incrementView", null);
 BlogController = __decorate([
     common_1.Controller('blog'),
     __metadata("design:paramtypes", [blog_service_1.BlogService])

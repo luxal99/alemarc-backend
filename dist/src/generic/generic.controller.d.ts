@@ -5,4 +5,5 @@ export declare class GenericController<T> {
     constructor(genericService: GenericService<T>);
     post(entity: T, res: Response): Promise<void>;
     get(res: Response): Promise<void>;
+    getById(res: Response, id: number): Promise<void>;
 }

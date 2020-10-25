@@ -12,11 +12,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BlogService = void 0;
 const common_1 = require("@nestjs/common");
 const generic_service_1 = require("../generic/generic.service");
+const blog_entity_1 = require("./blog.entity");
 const blog_repository_1 = require("../repository/blog.repository");
+const typeorm_1 = require("typeorm");
 let BlogService = class BlogService extends generic_service_1.GenericService {
     constructor(repository) {
         super(repository, ['listOfTechnologies', 'listOfImages']);
         this.repository = repository;
+    }
+    async incrementView(id) {
+        const blog = await this.findOne(id);
+        let numberOfViews = blog.numberOfViews + 1;
+        await typeorm_1.getConnection().createQueryBuilder().update(blog_entity_1.Blog).set({
+            numberOfViews: numberOfViews
+        }).where("id = :id", { id: blog.id }).execute();
+    }
+    async mostPopular() {
+        const blogs = await this.findAll();
+        blogs.sort((a, b) => (a.numberOfViews > b.numberOfViews ? -1 : 1));
+        return blogs.splice(0, 3);
     }
 };
 BlogService = __decorate([

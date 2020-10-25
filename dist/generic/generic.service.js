@@ -20,15 +20,10 @@ let GenericService = class GenericService {
     delete(id) {
     }
     findAll() {
-        try {
-            return this.genericRepository.find({ relations: this.relations });
-        }
-        catch (error) {
-            throw new common_1.BadGatewayException(error);
-        }
+        return this.genericRepository.find({ relations: this.relations });
     }
-    findOne(id) {
-        return Promise.resolve(undefined);
+    async findOne(id) {
+        return await this.genericRepository.findOne(id, { relations: this.relations });
     }
     async save(entity) {
         try {
