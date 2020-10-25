@@ -20,9 +20,9 @@ export class GenericService<T> implements GenericInterface<T> {
         return await this.genericRepository.findOne(id, {relations: this.relations})
     }
 
-    async save(entity: T): Promise<void> {
+    async save(entity: T): Promise<T> {
         try {
-            await this.genericRepository.save(entity)
+            return await this.genericRepository.save(entity)
         } catch (error) {
             throw new BadGatewayException(error);
         }

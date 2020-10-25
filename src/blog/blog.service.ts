@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {Inject, Injectable} from "@nestjs/common";
 import {GenericService} from "../generic/generic.service";
 import {Blog} from "./blog.entity";
 import {BlogRepository} from "../repository/blog.repository";
@@ -11,7 +11,6 @@ export class BlogService extends GenericService<Blog> {
     constructor(private readonly repository: BlogRepository) {
         super(repository, ['listOfTechnologies', 'listOfImages']);
     }
-
 
     async incrementView(id) {
         const blog: Blog = await this.findOne(id);

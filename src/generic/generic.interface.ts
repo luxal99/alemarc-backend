@@ -5,7 +5,7 @@ export interface GenericInterface<T> {
 
     update(id: number, entity: T): Promise<T>;
 
-    save(entity: T): Promise<void>;
+    save(entity: T): Promise<T>;
 
     delete(id: number);
 }

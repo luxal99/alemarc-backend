@@ -15,7 +15,7 @@ export class Blog extends Base {
     @Column({length: 10240})
     longText: string;
 
-    @Column()
+    @Column({default:0})
     numberOfViews: number;
 
     @OneToMany(type => Image, listOfImages => listOfImages.idBlog)
