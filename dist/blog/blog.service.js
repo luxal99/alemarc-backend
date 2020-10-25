@@ -32,6 +32,12 @@ let BlogService = class BlogService extends generic_service_1.GenericService {
         blogs.sort((a, b) => (a.numberOfViews > b.numberOfViews ? -1 : 1));
         return blogs.splice(0, 3);
     }
+    async updateTechnology(entity) {
+        const blog = await this.findOne(entity.id);
+        await typeorm_1.getConnection().createQueryBuilder()
+            .relation(blog_entity_1.Blog, 'listOfTechnologies').of(blog)
+            .addAndRemove(entity.listOfTechnologies, blog.listOfTechnologies);
+    }
 };
 BlogService = __decorate([
     common_1.Injectable(),

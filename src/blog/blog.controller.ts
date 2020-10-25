@@ -1,10 +1,11 @@
-import {Body, Controller, HttpStatus, Inject, Post, Put, Res} from '@nestjs/common';
+import {Body, Controller, HttpException, HttpStatus, Inject, Post, Put, Res} from '@nestjs/common';
 import {GenericController} from "../generic/generic.controller";
 import {Blog} from "./blog.entity";
 import {BlogService} from "./blog.service";
 import {Response} from "express";
 import {ImageService} from "../image/image.service";
 import {Image} from "../image/image.entity"
+import {getConnection} from "typeorm";
 
 @Controller('blog')
 export class BlogController extends GenericController<Blog> {
@@ -47,5 +48,17 @@ export class BlogController extends GenericController<Blog> {
         }).catch(() => {
             res.sendStatus(HttpStatus.BAD_GATEWAY);
         })
+    }
+
+    @Put()
+    async put(@Body() entity: Blog, @Res() res: Response) {
+
+        await this.service.update(entity.id, entity).then(() => {
+            this.service.updateTechnology(entity).then(async () => {
+                await this.imageService.deleteAllWhereBlog(entity).catch(() => {
+                })
+            })
+        })
+
     }
 }

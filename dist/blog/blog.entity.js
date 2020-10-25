@@ -15,13 +15,8 @@ const image_entity_1 = require("../image/image.entity");
 const technology_entity_1 = require("../technology/technology.entity");
 const base_entity_1 = require("../generic/base.entity");
 let Blog = class Blog extends base_entity_1.Base {
-    constructor(header, shortText, longText, listOfTechnologies) {
+    constructor() {
         super();
-        this.header = header;
-        this.shortText = shortText;
-        this.longText = longText;
-        this.listOfTechnologies = listOfTechnologies;
-        this.numberOfViews = 0;
     }
 };
 __decorate([
@@ -37,7 +32,7 @@ __decorate([
     __metadata("design:type", String)
 ], Blog.prototype, "longText", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ default: 0 }),
     __metadata("design:type", Number)
 ], Blog.prototype, "numberOfViews", void 0);
 __decorate([
@@ -51,7 +46,7 @@ __decorate([
 ], Blog.prototype, "listOfTechnologies", void 0);
 Blog = __decorate([
     typeorm_1.Entity(),
-    __metadata("design:paramtypes", [String, String, String, Array])
+    __metadata("design:paramtypes", [])
 ], Blog);
 exports.Blog = Blog;
 //# sourceMappingURL=blog.entity.js.map

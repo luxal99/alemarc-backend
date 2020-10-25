@@ -3,6 +3,7 @@ import {Body, Get, HttpStatus, Param, Post, Res} from "@nestjs/common";
 import {Response} from "express";
 
 export class GenericController<T> {
+
     constructor(private readonly genericService: GenericService<T>) {
     }
 

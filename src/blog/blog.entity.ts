@@ -26,12 +26,7 @@ export class Blog extends Base {
     listOfTechnologies: Technology[];
 
 
-    constructor(header: string, shortText: string, longText: string, listOfTechnologies: Array<Technology>) {
+    constructor() {
         super();
-        this.header = header;
-        this.shortText = shortText;
-        this.longText = longText;
-        this.listOfTechnologies = listOfTechnologies;
-        this.numberOfViews = 0;
     }
 }

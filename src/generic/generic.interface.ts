@@ -3,7 +3,7 @@ export interface GenericInterface<T> {
 
     findOne(id: number): Promise<T>;
 
-    update(id: number, entity: T): Promise<T>;
+    update(id: number, entity: T): Promise<void>;
 
     save(entity: T): Promise<T>;
 

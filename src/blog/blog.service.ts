@@ -26,4 +26,13 @@ export class BlogService extends GenericService<Blog> {
 
         return blogs.splice(0, 3);
     }
+
+    async updateTechnology(entity:Blog){
+        const blog:Blog = await this.findOne(entity.id);
+
+        await getConnection().createQueryBuilder()
+            .relation(Blog,'listOfTechnologies').of(blog)
+            .addAndRemove(entity.listOfTechnologies,blog.listOfTechnologies);
+
+    }
 }

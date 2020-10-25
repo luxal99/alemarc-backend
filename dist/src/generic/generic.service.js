@@ -16,7 +16,8 @@ let GenericService = class GenericService {
         this.genericRepository = genericRepository;
         this.relations = relations;
     }
-    delete(id) {
+    async delete(id) {
+        await this.genericRepository.delete(id);
     }
     findAll() {
         return this.genericRepository.find({ relations: this.relations });
@@ -26,14 +27,19 @@ let GenericService = class GenericService {
     }
     async save(entity) {
         try {
-            await this.genericRepository.save(entity);
+            return await this.genericRepository.save(entity);
         }
         catch (error) {
             throw new common_1.BadGatewayException(error);
         }
     }
-    update(id, entity) {
-        return Promise.resolve(undefined);
+    async update(id, entity) {
+        const responseAux = await this.genericRepository.findOne(id);
+        if (responseAux == null)
+            throw new common_1.NotFoundException("El id no existe");
+        entity["id"] = Number(id);
+        let mergeEntity = Object.assign(responseAux, entity);
+        const response = await this.genericRepository.save(mergeEntity);
     }
 };
 GenericService = __decorate([

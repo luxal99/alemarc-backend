@@ -6,4 +6,5 @@ export declare class BlogService extends GenericService<Blog> {
     constructor(repository: BlogRepository);
     incrementView(id: any): Promise<void>;
     mostPopular(): Promise<Blog[]>;
+    updateTechnology(entity: Blog): Promise<void>;
 }

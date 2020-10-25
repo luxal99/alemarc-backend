@@ -1,4 +1,4 @@
-import {BadGatewayException, Injectable} from "@nestjs/common";
+import {BadGatewayException, Injectable, NotFoundException} from "@nestjs/common";
 import {GenericInterface} from "./generic.interface";
 import {Repository} from "typeorm";
 
@@ -9,7 +9,8 @@ export class GenericService<T> implements GenericInterface<T> {
         private readonly genericRepository: Repository<T>, private relations: Array<string>) {
     }
 
-    delete(id: number) {
+    async delete(id: number) {
+        await this.genericRepository.delete(id);
     }
 
     findAll(): Promise<T[]> {
@@ -28,8 +29,13 @@ export class GenericService<T> implements GenericInterface<T> {
         }
     }
 
-    update(id: number, entity: T): Promise<T> {
-        return Promise.resolve(undefined);
+    async update(id: number, entity: T): Promise<void> {
+        const responseAux: Object = await this.genericRepository.findOne(id);
+        if (responseAux == null) throw new NotFoundException("El id no existe");
+
+        entity["id"] = Number(id);
+        let mergeEntity: any = Object.assign(responseAux, entity);
+        const response: T = await this.genericRepository.save(mergeEntity);
     }
 
 }

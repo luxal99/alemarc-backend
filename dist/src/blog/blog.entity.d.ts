@@ -8,5 +8,5 @@ export declare class Blog extends Base {
     numberOfViews: number;
     listOfImages: Image[];
     listOfTechnologies: Technology[];
-    constructor(header: string, shortText: string, longText: string, listOfTechnologies: Array<Technology>);
+    constructor();
 }

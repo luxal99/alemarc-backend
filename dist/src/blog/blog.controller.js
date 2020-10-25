@@ -16,10 +16,23 @@ const common_1 = require("@nestjs/common");
 const generic_controller_1 = require("../generic/generic.controller");
 const blog_entity_1 = require("./blog.entity");
 const blog_service_1 = require("./blog.service");
+const image_service_1 = require("../image/image.service");
+const image_entity_1 = require("../image/image.entity");
 let BlogController = class BlogController extends generic_controller_1.GenericController {
     constructor(service) {
         super(service);
         this.service = service;
+    }
+    async save(entity, res) {
+        await this.service.save(entity).then(async () => {
+            for (const img of entity.listOfImages) {
+                await this.imageService.save(new image_entity_1.Image(img.url, entity));
+            }
+        }).then(() => {
+            res.sendStatus(common_1.HttpStatus.OK);
+        }).catch(() => {
+            res.sendStatus(common_1.HttpStatus.BAD_GATEWAY);
+        });
     }
     async getPopular(res) {
         try {
@@ -36,7 +49,26 @@ let BlogController = class BlogController extends generic_controller_1.GenericCo
             res.sendStatus(common_1.HttpStatus.BAD_GATEWAY);
         });
     }
+    async put(entity, res) {
+        await this.service.update(entity.id, entity).then(() => {
+            this.service.updateTechnology(entity).then(async () => {
+                await this.imageService.deleteAllWhereBlog(entity).catch(() => {
+                });
+            });
+        });
+    }
 };
+__decorate([
+    common_1.Inject(),
+    __metadata("design:type", image_service_1.ImageService)
+], BlogController.prototype, "imageService", void 0);
+__decorate([
+    common_1.Post(),
+    __param(0, common_1.Body()), __param(1, common_1.Res()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [blog_entity_1.Blog, Object]),
+    __metadata("design:returntype", Promise)
+], BlogController.prototype, "save", null);
 __decorate([
     common_1.Post('/popular'),
     __param(0, common_1.Res()),
@@ -51,6 +83,13 @@ __decorate([
     __metadata("design:paramtypes", [blog_entity_1.Blog, Object]),
     __metadata("design:returntype", Promise)
 ], BlogController.prototype, "incrementView", null);
+__decorate([
+    common_1.Put(),
+    __param(0, common_1.Body()), __param(1, common_1.Res()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [blog_entity_1.Blog, Object]),
+    __metadata("design:returntype", Promise)
+], BlogController.prototype, "put", null);
 BlogController = __decorate([
     common_1.Controller('blog'),
     __metadata("design:paramtypes", [blog_service_1.BlogService])
