@@ -12,12 +12,12 @@ const blog_service_1 = require("./blog.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const blog_repository_1 = require("../repository/blog.repository");
 const image_service_1 = require("../image/image.service");
-const ImageRepository_1 = require("../repository/ImageRepository");
+const image_repository_1 = require("../repository/image.repository");
 let BlogModule = class BlogModule {
 };
 BlogModule = __decorate([
     common_1.Module({
-        imports: [typeorm_1.TypeOrmModule.forFeature([blog_repository_1.BlogRepository, ImageRepository_1.ImageRepository])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([blog_repository_1.BlogRepository, image_repository_1.ImageRepository])],
         controllers: [blog_controller_1.BlogController],
         providers: [blog_service_1.BlogService, image_service_1.ImageService]
     })

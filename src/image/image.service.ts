@@ -1,16 +1,15 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {GenericService} from "../generic/generic.service";
 import {Image} from "./image.entity";
-import {ImageRepository} from "../repository/ImageRepository";
+import {ImageRepository} from "../repository/image.repository";
 import {Blog} from "../blog/blog.entity";
-import {BlogService} from "../blog/blog.service";
 
 @Injectable()
 export class ImageService extends GenericService<Image> {
 
 
     constructor(private readonly repository: ImageRepository) {
-        super(repository, []);
+        super(repository, ['idBlog']);
     }
 
     async deleteAllWhereBlog(blog: Blog) {

@@ -4,7 +4,7 @@ import {Blog} from "./blog.entity";
 import {BlogService} from "./blog.service";
 import {Response} from "express";
 import {ImageService} from "../image/image.service";
-import {Image} from "../image/image.entity"
+import {Image} from "../image/image.entity";
 
 @Controller('blog')
 export class BlogController extends GenericController<Blog> {
@@ -52,11 +52,22 @@ export class BlogController extends GenericController<Blog> {
 
     @Put()
     async put(@Body() entity: Blog, @Res() res: Response) {
-
-        await this.service.update(entity.id, entity).then(() => {
+        await this.service.update(entity.id, entity).then(async () => {
             this.service.updateTechnology(entity).then(async () => {
+            }).then(async () => {
 
+                const blog: Blog = await this.service.findOne(entity.id);
+
+                await this.imageService.deleteAllWhereBlog(blog).then(async () => {
+
+                    for (const img of entity.listOfImages) {
+                        await this.imageService.save(new Image(img.url, entity))
+                    }
+                }).then(() => {
+                    res.sendStatus(HttpStatus.OK)
+                });
             })
+
         }).catch(() => {
             res.sendStatus(HttpStatus.BAD_GATEWAY)
         })
