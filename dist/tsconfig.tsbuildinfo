@@ -2970,7 +2970,7 @@
         "signature": "c4309de1e30ea2b276c59b25372f2f495fe24b17f0a836b1ce4a67606cbe7f73"
       },
       "../src/blog/blog.controller.ts": {
-        "version": "7074a9857c0b43b7886f4bd8e6c752a2ed7622db126900631ada985a61944146",
+        "version": "7e8dcf6ec01ad0c750a4c84aaff1f2451065e6cad6067ae8259b2bb1e5cdfae0",
         "signature": "c74ee8da9e379764ca1dd3c937abced4a59429a21007d54da34ed1f0976f41bb"
       },
       "../src/blog/blog.module.ts": {

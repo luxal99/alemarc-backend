@@ -8,10 +8,10 @@ export class GenericController<T> {
     constructor(private readonly genericService: GenericService<T>) {
     }
 
-    redisClient = redis.createClient(6379,"127.0.0.1");
-    set = (key, value) => {
-        this.redisClient.set(key, JSON.stringify(value));
-    }
+    // redisClient = redis.createClient(6379,"127.0.0.1");
+    // set = (key, value) => {
+    //     this.redisClient.set(key, JSON.stringify(value));
+    // }
 
     @Post()
     async post(@Body() entity: T, @Res() res: Response) {
@@ -25,7 +25,6 @@ export class GenericController<T> {
     @Get()
     async get(@Res() res: Response, @Req() req: Request) {
         res.send(await this.genericService.findAll())
-        this.set(req.route.path, await this.genericService.findAll());
     }
 
     @Get('/:id')
