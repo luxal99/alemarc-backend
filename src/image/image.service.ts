@@ -16,9 +16,13 @@ export class ImageService extends GenericService<Image> {
         const images: Array<Image> = await this.findAll();
 
         for (const img of images) {
-            if (img.idBlog.id === blog.id) {
+            if (img.idBlog === null) {
+                await this.delete(img.id)
+            } else if (img.idBlog.id === blog.id) {
+
                 await this.delete(img.id)
             }
+
         }
     }
 }

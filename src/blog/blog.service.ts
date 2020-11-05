@@ -8,7 +8,7 @@ import {getConnection} from "typeorm";
 export class BlogService extends GenericService<Blog> {
 
     constructor(private readonly repository: BlogRepository) {
-        super(repository, ['listOfTechnologies', 'listOfImages']);
+        super(repository, ['listOfTechnologies', 'listOfImages','listOfImages.idBlog']);
     }
 
     async incrementView(id) {

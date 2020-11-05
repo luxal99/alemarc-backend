@@ -13,14 +13,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
-const redis = require("redis");
 class GenericController {
     constructor(genericService) {
         this.genericService = genericService;
-        this.redisClient = redis.createClient(6379, "127.0.0.1");
-        this.set = (key, value) => {
-            this.redisClient.set(key, JSON.stringify(value));
-        };
     }
     async post(entity, res) {
         await this.genericService.save(entity).then(() => {
@@ -31,7 +26,6 @@ class GenericController {
     }
     async get(res, req) {
         res.send(await this.genericService.findAll());
-        this.set(req.route.path, await this.genericService.findAll());
     }
     async getById(res, id) {
         try {

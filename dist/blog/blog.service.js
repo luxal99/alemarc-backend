@@ -17,7 +17,7 @@ const blog_repository_1 = require("../repository/blog.repository");
 const typeorm_1 = require("typeorm");
 let BlogService = class BlogService extends generic_service_1.GenericService {
     constructor(repository) {
-        super(repository, ['listOfTechnologies', 'listOfImages']);
+        super(repository, ['listOfTechnologies', 'listOfImages', 'listOfImages.idBlog']);
         this.repository = repository;
     }
     async incrementView(id) {

@@ -59,10 +59,12 @@ export class BlogController extends GenericController<Blog> {
                 const blog: Blog = await this.service.findOne(entity.id);
 
                 await this.imageService.deleteAllWhereBlog(blog).then(async () => {
-
                     for (const img of entity.listOfImages) {
-                        await this.imageService.save(new Image(img.url, entity))
+                        await this.imageService.save(new Image(img.url,blog)).catch(()=>{
+                            res.sendStatus(HttpStatus.BAD_GATEWAY)
+                        })
                     }
+
                 }).then(() => {
                     res.sendStatus(HttpStatus.OK)
                 });

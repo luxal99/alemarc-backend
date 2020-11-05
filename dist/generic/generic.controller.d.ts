@@ -3,8 +3,6 @@ import { Response, Request } from "express";
 export declare class GenericController<T> {
     private readonly genericService;
     constructor(genericService: GenericService<T>);
-    redisClient: any;
-    set: (key: any, value: any) => void;
     post(entity: T, res: Response): Promise<void>;
     get(res: Response, req: Request): Promise<void>;
     getById(res: Response, id: number): Promise<void>;

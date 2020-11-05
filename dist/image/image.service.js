@@ -21,7 +21,10 @@ let ImageService = class ImageService extends generic_service_1.GenericService {
     async deleteAllWhereBlog(blog) {
         const images = await this.findAll();
         for (const img of images) {
-            if (img.idBlog.id === blog.id) {
+            if (img.idBlog === null) {
+                await this.delete(img.id);
+            }
+            else if (img.idBlog.id === blog.id) {
                 await this.delete(img.id);
             }
         }
