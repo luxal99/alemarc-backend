@@ -26,7 +26,8 @@ class GenericController {
         });
     }
     async get(res, req) {
-        res.send(await this.genericService.findAll());
+        const arr = await this.genericService.findAll();
+        res.send(arr.reverse());
     }
     async getById(res, id) {
         try {

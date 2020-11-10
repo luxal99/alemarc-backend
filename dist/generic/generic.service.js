@@ -37,7 +37,7 @@ let GenericService = class GenericService {
     async update(id, entity) {
         const responseAux = await this.genericRepository.findOne(id);
         if (responseAux == null)
-            throw new common_1.NotFoundException("El id no existe");
+            throw new common_1.NotFoundException("Not exist");
         entity["id"] = Number(id);
         let mergeEntity = Object.assign(responseAux, entity);
         const response = await this.genericRepository.save(mergeEntity);

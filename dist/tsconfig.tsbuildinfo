@@ -2130,7 +2130,7 @@
         "signature": "46383b35adb89b63a1fb1dac5bb057e9037f5b729f9f84b4cddff67c6b8c0aa4"
       },
       "../src/generic/generic.service.ts": {
-        "version": "4c2edd29f7a0433fa69a8c5b2edef80b2823ac6007eaed09141dfc462c625904",
+        "version": "fca56a40b1915aa0e13c4f898b6a0b1f120b4547f9348974e41d00f76f29e3f4",
         "signature": "cd5a04926da75fe8b49e09e885d3b7e8ebe7ed180fc50a3c1b8090d40c6f71e3"
       },
       "../node_modules/@types/node/globals.d.ts": {
@@ -2350,7 +2350,7 @@
         "signature": "088d420a09a36d241f1ddbdcb553951c02ef0844014727a29712d2ced57edd22"
       },
       "../src/generic/generic.controller.ts": {
-        "version": "902b63899a78d1406e11a6b98892ed0139efbeeecbbfd5e5c8b740e1313c485f",
+        "version": "729a31bfae1762f441d0c85ad5a5a7fbebd417e64a30ab7c9609e002bbc22f37",
         "signature": "bc1a056a73d21978ee37a6d5276df5f0b4688ddfdd1154ab101c2038672de09b"
       },
       "../src/generic/base.entity.ts": {
@@ -9740,7 +9740,6 @@
       "../node_modules/typeorm/migration/MigrationExecutor.d.ts",
       "../node_modules/typeorm/naming-strategy/DefaultNamingStrategy.d.ts",
       "../node_modules/typeorm/index.d.ts",
-      "../src/generic/generic.service.ts",
       "../node_modules/@types/node/globals.d.ts",
       "../node_modules/@types/node/async_hooks.d.ts",
       "../node_modules/@types/node/buffer.d.ts",
@@ -9795,12 +9794,12 @@
       "../node_modules/@types/connect/index.d.ts",
       "../node_modules/@types/body-parser/index.d.ts",
       "../node_modules/@types/express/index.d.ts",
-      "../src/generic/generic.controller.ts",
       "../src/generic/base.entity.ts",
       "../src/technology/technology.entity.ts",
       "../src/blog/blog.entity.ts",
       "../src/image/image.entity.ts",
       "../src/repository/image.repository.ts",
+      "../src/image/image.service.ts",
       "../src/image/image.controller.ts",
       "../node_modules/@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type.d.ts",
       "../node_modules/@nestjs/typeorm/dist/common/typeorm.decorators.d.ts",
@@ -10006,7 +10005,8 @@
       "../node_modules/@types/webpack/index.d.ts",
       "../node_modules/@types/yargs-parser/index.d.ts",
       "../node_modules/@types/yargs/index.d.ts",
-      "../src/image/image.service.ts"
+      "../src/generic/generic.service.ts",
+      "../src/generic/generic.controller.ts"
     ]
   },
   "version": "3.8.3"

@@ -31,7 +31,7 @@ export class GenericService<T> implements GenericInterface<T> {
 
     async update(id: number, entity: T): Promise<void> {
         const responseAux: Object = await this.genericRepository.findOne(id);
-        if (responseAux == null) throw new NotFoundException("El id no existe");
+        if (responseAux == null) throw new NotFoundException("Not exist");
 
         entity["id"] = Number(id);
         let mergeEntity: any = Object.assign(responseAux, entity);
