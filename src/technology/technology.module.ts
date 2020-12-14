@@ -11,3 +11,4 @@ import {TechnologyRepository} from "../repository/technology.repository";
 })
 export class TechnologyModule {
 }
+

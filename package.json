@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "tsc && cp ./.env ./dist",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -22,11 +22,14 @@
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
+    "@nestjs/config": "^0.6.1",
     "@nestjs/core": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/typeorm": "^7.1.4",
     "bcrypt": "^5.0.0",
     "class-validator": "^0.12.2",
+    "dotenv": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",

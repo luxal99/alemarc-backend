@@ -5,8 +5,9 @@ import {BlogService} from "./blog.service";
 import {Response} from "express";
 import {ImageService} from "../image/image.service";
 import {Image} from "../image/image.entity";
+import {BLOG_ROUTE} from "../constants/const";
 
-@Controller('blog')
+@Controller(BLOG_ROUTE)
 export class BlogController extends GenericController<Blog> {
 
     @Inject()
