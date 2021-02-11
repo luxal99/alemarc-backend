@@ -25,9 +25,9 @@ import {
                 "type": "mysql",
                 "host": "localhost",
                 "port": 3306,
-                "username": DB_USERNAME,
-                "password": DB_PASSWORD,
-                "database": DB_NAME,
+                "username":  process.env.DB_USERNAME,
+                "password":  process.env.DB_PASSWORD,
+                "database":  process.env.DB_NAME,
                 "synchronize": true,
                 "logging": false,
                 "entities": LIST_OF_ENTITIES
