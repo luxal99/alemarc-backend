@@ -42,6 +42,7 @@ import {
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer): any {
+        consumer.apply(JWTMiddle).forRoutes('jwt')
         consumer.apply(JWTMiddle).forRoutes(
             {path: BLOG_ROUTE, method: RequestMethod.POST},
             {path: BLOG_ROUTE, method: RequestMethod.PUT},
